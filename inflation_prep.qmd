@@ -4,6 +4,7 @@ subtitle: "Data preparation"
 format: html
 editor: visual
 ---
+
 # Introduction
 
 This document contains the data engineering required to reconstruct and improve the plot by @Joella_Carman and @Nigel_Chiwaya, shown in @NBC_News, depicting inflation year over year for major categories of goods (May 2023 to Apr 2024).
@@ -19,7 +20,6 @@ library(knitr)
 library(readxl)
 ```
 
-
 ```{r}
 #| label: fig-inflation
 #| echo: false
@@ -28,28 +28,19 @@ library(readxl)
 
 include_graphics("images/inflation-original-big.png")
 ```
+
 # Data Cleaning
 
-@Joella_Carman and @Nigel_Chiwaya based their visualization data on Bureau of Labor Statistics and Energy Information Administration data, available in XLXS format with each row representing a major category of goods. (source: https://www.bls.gov/cpi/tables/supplemental-files/) 
+@Joella_Carman and @Nigel_Chiwaya based their visualization data on [Bureau of Labor Statistics](https://www.bls.gov/cpi/tables/supplemental-files/) and Energy Information Administration data, available in XLXS format with each row representing a major category of goods.
 
+The data is separated into various XLXS files, one for each month. We will combine these files into a single data set, while also dropping columns that are not relevant for our analysis. We will also drop indent levels of 4 and above, as these are subcategories of the main categories we are interested in.
 
-The data is separated into various XLXS files, one for each month. 
-We will combine these files into a single data set, while also dropping columns that are not relevant for our analysis.
-We will also drop indent levels of 4 and above, as these are subcategories of the main categories we are interested in.
+Relevant columns for data processing include: - `Expenditure category`: Category of goods - `Unadjusted percent change`: Inflation rate change year on year for the category
 
-Relevant columns for data processing include: 
--   `Expenditure category`: Category of goods
--   `Unadjusted percent change`: Inflation rate change year on year for the category
-
-For our data processing purposes, we will only retain rows where `Expenditure category` is one of the following:
--   `All items`: Overall inflation
--   `Airline fares`: Airfare
--   `New and used motor vehicles`: Cars
--   `Apparel`: Clothing
--   `Shelter`: Housing costs
--   `Meats, poultry, fish, and eggs`: Meat and eggs
+For our data processing purposes, we will only retain rows where `Expenditure category` is one of the following: - `All items`: Overall inflation - `Airline fares`: Airfare - `New and used motor vehicles`: Cars - `Apparel`: Clothing - `Shelter`: Housing costs - `Meats, poultry, fish, and eggs`: Meat and eggs
 
 We will then pivot the data to a wide format, with each row representing a category of goods and each column representing the year and month of the inflation rate change year on year.
+
 ```{r}
 #| label: merge-files
 #| echo: false
@@ -99,7 +90,9 @@ wide_data <- filtered_data %>%
 write_csv(wide_data, "data/merged/filtered_wide_inflation_data.csv")
 
 ```
+
 For the next step, we will merge the data with the data on electricity and gas prices, which are not included in the original data set. We will then calculate the average inflation rate for each category over the year.
+
 ```{r}
 
 # tmr ba..
