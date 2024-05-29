@@ -1,0 +1,106 @@
+---
+title: "Visualising inflation in the USA (2019-2024)"
+subtitle: "Data preparation"
+format: html
+editor: visual
+---
+# Introduction
+
+This document contains the data engineering required to reconstruct and improve the plot by @Joella_Carman and @Nigel_Chiwaya, shown in @NBC_News, depicting inflation year over year for major categories of goods (May 2023 to Apr 2024).
+
+The code below requires the following packages:
+
+```{r}
+#| label: library
+#| message: false
+
+library(tidyverse)
+library(knitr)
+library(readxl)
+```
+
+
+```{r}
+#| label: fig-inflation
+#| echo: false
+#| fig.cap: "Visualising inflation in the USA from May 2023 to Apr 2024
+#|  by @Joella_Carman and @Nigel_Chiwaya."
+
+include_graphics("images/inflation-original-big.png")
+```
+# Data Cleaning
+
+@Joella_Carman and @Nigel_Chiwaya based their visualization data on Bureau of Labor Statistics and Energy Information Administration data, available in XLXS format with each row representing a major category of goods. (source: https://www.bls.gov/cpi/tables/supplemental-files/) 
+
+
+The data is separated into various XLXS files, one for each month. 
+We will combine these files into a single data set, while also dropping columns that are not relevant for our analysis.
+We will also drop indent levels of 4 and above, as these are subcategories of the main categories we are interested in.
+
+Relevant columns for data processing include: 
+-   `Expenditure category`: Category of goods
+-   `Unadjusted percent change`: Inflation rate change year on year for the category
+
+For our data processing purposes, we will only retain rows where `Expenditure category` is one of the following:
+-   `All items`: Overall inflation
+-   `Airline fares`: Airfare
+-   `New and used motor vehicles`: Cars
+-   `Apparel`: Clothing
+-   `Shelter`: Housing costs
+-   `Meats, poultry, fish, and eggs`: Meat and eggs
+
+We will then pivot the data to a wide format, with each row representing a category of goods and each column representing the year and month of the inflation rate change year on year.
+```{r}
+#| label: merge-files
+#| echo: false
+
+# Get a list of all the XLSX file paths
+xlsx_files <- list.files(path = "data/raw", pattern = "*.xlsx", full.names = TRUE)
+
+# Read and combine the XLSX files, selecting the desired columns and skipping rows
+# We also add columns for year and month of data
+inflation_data <- map_dfr(xlsx_files,function(file) { 
+  read_excel(file, skip = 6) |>
+    select(expenditure_category = 2,
+           percent_change = 4)|>
+      mutate(year = str_extract(basename(file), "\\d{4}"),
+      month = str_extract(basename(file), "\\d{2}(?!\\d)"),
+      expenditure_category = str_replace(expenditure_category, "\\(.*", ""))|>
+      filter(!is.na(expenditure_category))
+})
+
+# write_csv(inflation_data, "data/merged/merged_inflation_data.csv")
+
+
+# Keep only the categories we are interested in, TBD list:
+# what is on NBC's chart -> csv column name
+# overall inflation -> All items
+# airfare  -> airline fares
+# cars -> New and used motor vehicles
+# clothing -> Apparel
+# electricity -> from another dataset
+# gas -> from another dataset
+# housing costs -> shelter
+# meat and eggs -> Meats, poultry, fish, and eggs
+
+
+keep_categories <- c("All items", "Airline fares", "New and used motor vehicles", "Apparel", "Shelter", "Meats, poultry, fish, and eggs")
+filtered_data <- inflation_data %>%
+  filter(expenditure_category %in% keep_categories)
+
+# write_csv(filtered_data, "data/merged/filtered_inflation_data.csv")
+
+# Pivot the data to wide format
+wide_data <- filtered_data %>%
+  unite(year_month, year, month, sep = "/") %>%
+  pivot_wider(names_from = year_month, 
+              values_from = c(percent_change), 
+              names_sep = "/")
+write_csv(wide_data, "data/merged/filtered_wide_inflation_data.csv")
+
+```
+For the next step, we will merge the data with the data on electricity and gas prices, which are not included in the original data set. We will then calculate the average inflation rate for each category over the year.
+```{r}
+
+# tmr ba..
+```
