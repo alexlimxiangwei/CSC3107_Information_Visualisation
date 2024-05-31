@@ -2,6 +2,7 @@
 title: Inflation in the USA 
 format:
   poster-typst: 
+    
     size: "33x23" # Approximately A1
     poster-authors: "Michael T. Gastner"
     departments: "Information and Communication Technologies"
@@ -9,12 +10,14 @@ format:
     footer-text: "Information Visualization 2024"
     footer-emails: "michael.gastner@singaporetech.edu.sg"
     footer-color: "ebcfb2"
-    
 execute:
   echo: false
 knitr:
   opts_chunk:
     dev: svglite
+editor: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r}
@@ -28,11 +31,21 @@ library(knitr)
 
 # Introduction
 
-Inflation, the rate at which the general level of prices for goods and services rises, eroding purchasing power, is a key economic indicator. It impacts everything from the cost of groceries to the interest rates on loans. While moderate inflation is a sign of a growing economy, excessive inflation can reduce the value of money, leading to uncertainty and financial strain for consumers and businesses alike.
+Inflation, the rate at which the general level of prices for goods and
+services rises, eroding purchasing power, is a key economic indicator.
+It impacts everything from the cost of groceries to the interest rates
+on loans. While moderate inflation is a sign of a growing economy,
+excessive inflation can reduce the value of money, leading to
+uncertainty and financial strain for consumers and businesses alike.
 
-In this project, we have developed a comprehensive visualization to monitor inflation across various consumer metrics. Our aim is to provide a clear, up-to-date picture of how inflation is affecting different sectors of the economy. The chart below shows monthly changes in consumer prices compared to the same time the previous year, offering valuable insights into the current inflation trends. This visualization will be updated regularly to reflect the latest data and help track the trajectory of inflation over time.
-
-[^lee_reproducing_2017]: <https://www.mikelee.co/posts/2017-06-28-wsj-measles-vaccination-chart>
+In this project, we have developed a comprehensive visualization to
+monitor inflation across various consumer metrics. Our aim is to provide
+a clear, up-to-date picture of how inflation is affecting different
+sectors of the economy. The chart below shows monthly changes in
+consumer prices compared to the same time the previous year, offering
+valuable insights into the current inflation trends. This visualization
+will be updated regularly to reflect the latest data and help track the
+trajectory of inflation over time.
 
 # Previous Visualization
 
@@ -45,19 +58,17 @@ In this project, we have developed a comprehensive visualization to monitor infl
 include_graphics("images/inflation-original.png")
 ```
 
-[^debold_battling_2015]: <https://graphics.wsj.com/infectious-diseases-and-vaccines/>
-
 # Strengths
 
-*   The heatmap design effectively conveys a high information content without
-    cluttering the plot.
-*   Pointing with the mouse at a tile opens an infotip, enabling readers to
-    retrieve specific incidence data for a given state and
-    year (@fig-infotip_color_change). The infotip only occludes a small
-    portion of the plot, and the partial transparency of the infotip ensures
-    visibility of the tiles underneath.
-*   The vertical line indicating the year of vaccine introduction provides
-    valuable contextual information.
+-   The heatmap design effectively conveys a high information content
+    without cluttering the plot.
+-   Pointing with the mouse at a tile opens an infotip, enabling readers
+    to retrieve specific incidence data for a given state and year
+    (@fig-infotip_color_change). The infotip only occludes a small
+    portion of the plot, and the partial transparency of the infotip
+    ensures visibility of the tiles underneath.
+-   The vertical line indicating the year of vaccine introduction
+    provides valuable contextual information.
 
 ```{r}
 #| label: fig-infotip_color_change
@@ -68,75 +79,81 @@ include_graphics("images/inflation-original.png")
 #include_graphics("images/infotip_color_change.png")
 ```
 
-
 # Suggested Improvements
 
-1.  *Add a plot title and a source note* so that the figure can be understood in
-    isolation (e.g., when shared on social media).
-1.  *Identify missing data clearly.*  Rendering unknown incidence fully
-    transparent will distinguish it from zero incidence,
-1.  *Include labels for every state.* To avoid overplotting, use two-letter
-    abbreviations instead of full state names and stagger the labels along the
-    y-axis.
-1.  *Add a title to the color legend.*
-1.  *Avoid using a rainbow color palette.* It lacks a meaningful progression
-    through color space and is not colorblind-friendly. Consider using a
-    sequential ColorBrewer palette instead.[^colorbrewer]
-1.  *Use a discrete color palette.* Continuous palettes can make it
-    challenging for humans to detect patterns below just noticeable color
-    differences.
-1.  *Apply a logarithmic color scale* because most data are below the mean
-    incidence.
-1.  *Add grid lines* in ten-year intervals along the x-axis and for every
-    second state along the y-axis. Grid lines will aid in identifying states
-    and years in the middle of the plot, even without the infotip.
-1.  Because there are more missing data on the right side of the plot,
-    *shifting y-axis labels to the right* will improve visually matching
-    states with corresponding grid lines.
-    
-[^colorbrewer]: <https://colorbrewer2.org/#type=sequential&scheme=Reds&n=5>
-    
-    
-# Implementation
+1.  *Adding more layers of information to the chart.*
 
+    Information like:
+
+    -   Inflation was due to major events like COVID-19, recessions, or
+        weather changes (e.g. hotter/colder seasons)
+    -   Inflation in different geographical locations
+
+2.  *Varying the size of the square boxes* to convey additional
+    information (e.g. size of industry, as each category has varying
+    impacts on the economy.
+
+3.  *Incorporate mirrored histograms, stacked histograms, or separate
+    histograms* to present the data more effectively.
+
+4.  *Shade areas* to represent significant events such as recessions or
+    the COVID-19 pandemic.
+
+5.  *Add an interactive straight line* for readers to follow across the
+    graph, enhancing readability and comprehension.
+
+6.  *Add a category like "Others"* to capture data that does not fit
+    into the predefined categories, ensuring completeness.
+
+# Implementation
 
 ## Data
 
-*   Weekly counts of measles cases by state were obtained from Project
-    Tycho.[^panhuis_counts_2018] The data have missing weeks, which were
-    treated as zero in @fig-wsj-on-poster, potentially underestimating the
-    annual total. Instead, we calculated the weekly mean case count on the
-    basis of non-missing data only.
-*   Decennial U.S.\ census data for each state.[^stats_state_2023]
+-   Weekly counts of measles cases by state were obtained from Project
+    Tycho.[^1] The data have missing weeks, which were treated as zero
+    in @fig-wsj-on-poster, potentially underestimating the annual total.
+    Instead, we calculated the weekly mean case count on the basis of
+    non-missing data only.
+-   Decennial U.S. census data for each state.[^2]
 
-[^panhuis_counts_2018]: <https://doi.org/10.25337/T7/ptycho.v2.0/US.14189004>
-[^stats_state_2023]: <https://www.stats.indiana.edu/population/PopTotals/historic_counts_states.asp>
+[^1]: <https://doi.org/10.25337/T7/ptycho.v2.0/US.14189004>
 
+[^2]: <https://www.stats.indiana.edu/population/PopTotals/historic_counts_states.asp>
 
 ## Software
 
-We used the Quarto publication framework and the R programming language, along with the following third-party packages:
+We used the Quarto publication framework and the R programming language,
+along with the following third-party packages:
 
-*   *readxl* for data import
-*   *tidyverse* for data transformation, including *ggplot2* for visualization
-    based on the grammar of graphics
-*   *knitr* for dynamic document generation
-*   *zoo* for interpolating annual population data from the decennial
-    U.S.\ census
+-   *readxl* for data import
+-   *tidyverse* for data transformation, including *ggplot2* for
+    visualization based on the grammar of graphics
+-   *knitr* for dynamic document generation
+-   *zoo* for interpolating annual population data from the decennial
+    U.S. census
 
 ```{=typst}
 #v(2em)
 ```
-
 # Improved Visualization
-
-
 
 # Further Suggestions for Interactivity
 
-Because our visualization was intended for a poster, we did not implement any interactive features, including the infotip. However, if the data are visualized in an HTML document, interactive features can be achieved using the R packages such as *plotly*. In that case, we recommend that the tile does not change its fill color. In contrast, the original visualization changes the fill color of the activated tile to light blue (see @fig-infotip_color_change), which can be misinterpreted as a change in incidence. Instead, we suggest highlighting the activated tile by thickening its border.
-
+Because our visualization was intended for a poster, we did not
+implement any interactive features, including the infotip. However, if
+the data are visualized in an HTML document, interactive features can be
+achieved using the R packages such as *plotly*. In that case, we
+recommend that the tile does not change its fill color. In contrast, the
+original visualization changes the fill color of the activated tile to
+light blue (see @fig-infotip_color_change), which can be misinterpreted
+as a change in incidence. Instead, we suggest highlighting the activated
+tile by thickening its border.
 
 # Conclusion
 
-We successfully implemented all suggested improvements for the non-interactive visualization. By labeling every state and choosing a colorblind-friendly palette, the revised plot is more accessible. The logarithmic color scale makes the decrease in incidence after the introduction of the vaccine less striking but enables readers to detect patterns in the low-incidence range more easily.
+We successfully implemented all suggested improvements for the
+non-interactive visualization. By labeling every state and choosing a
+colorblind-friendly palette, the revised plot is more accessible. The
+logarithmic color scale makes the decrease in incidence after the
+introduction of the vaccine less striking but enables readers to detect
+patterns in the low-incidence range more easily.
