@@ -60,15 +60,28 @@ include_graphics("images/inflation-original.png")
 
 # Strengths
 
+-   The plot title and subtitle is clear and informative, immediately
+    providing context and helping readers to understand the focus of the
+    visualization.
 -   The heatmap design effectively conveys a high information content
-    without cluttering the plot.
+    without cluttering the plot. This allows for quick and intuitive
+    understanding of the data trends.
 -   Pointing with the mouse at a tile opens an infotip, enabling readers
     to retrieve specific incidence data for a given state and year
     (@fig-infotip_color_change). The infotip only occludes a small
     portion of the plot, and the partial transparency of the infotip
     ensures visibility of the tiles underneath.
--   The vertical line indicating the year of vaccine introduction
-    provides valuable contextual information.
+-   The colors chosen (red and blue) are color-blind friendly, ensuring
+    that the visualization is accessible to a wider audience.
+-   The inclusion of detailed source information at the bottom of the
+    chart adds credibility and transparency to the data presented.
+-   The overall design is user-friendly, with a clean layout, intuitive
+    color coding, and easy-to-read labels, making the visualization
+    accessible to a broad audience.
+-   The color legend is clear and informative which helps readers to
+    quickly understand the meaning of the the colors (red-increasing
+    inflation, blue-decreasing inflation) and the range of percentage
+    changes displayed.
 
 ```{r}
 #| label: fig-infotip_color_change
