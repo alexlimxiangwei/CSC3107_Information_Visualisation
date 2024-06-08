@@ -5,11 +5,13 @@ format: html
 editor: visual
 ---
 
+
 # Introduction
 
 This document contains the data engineering required to reconstruct and improve the plot by @Joella_Carman and @Nigel_Chiwaya, shown in @NBC_News, depicting inflation year over year for major categories of goods (May 2023 to Apr 2024).
 
 The code below requires the following packages:
+
 
 ```{r}
 #| label: library
@@ -33,6 +35,7 @@ library(pheatmap)
 include_graphics("images/inflation-original-big.png")
 ```
 
+
 # Data Cleaning
 
 @Joella_Carman and @Nigel_Chiwaya based their visualization data on [Bureau of Labor Statistics](https://www.bls.gov/cpi/tables/supplemental-files/) and Energy Information Administration data, available in XLXS format with each row representing a major category of goods.
@@ -44,6 +47,7 @@ Relevant columns for data processing include: - `Expenditure category`: Category
 For our data processing purposes, we will only retain rows where `Expenditure category` is one of the following: - `All items`: Overall inflation - `Airline fares`: Airfare - `New and used motor vehicles`: Cars - `Apparel`: Clothing - `Shelter`: Housing costs - `Meats, poultry, fish, and eggs`: Meat and eggs
 
 We will then pivot the data to a wide format, with each row representing a category of goods and each column representing the year and month of the inflation rate change year on year.
+
 
 ```{r}
 #| label: merge-files
@@ -116,7 +120,9 @@ View(wide_data)
 
 ```
 
+
 For the next step, we will merge the data with the data on electricity and gas prices, which are not included in the original data set. We will then calculate the average inflation rate for each category over the year.
+
 
 ```{r}
 #| label: merge-electricity-gas
@@ -142,3 +148,4 @@ pheatmap(inflation_matrix,
          fontsize_row = 10,
          fontsize_col = 8)
 ```
+
