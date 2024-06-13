@@ -40,13 +40,12 @@ include_graphics("images/inflation-original-big.png")
 Instead of only May 2023 to Apr 2024, we will instead use data from Jan 2019 to Mar 2024.(No data for April 2024 for electricity yet)
 Having 5 years of data will give us a clearer picture of the inflation rates for the major categories of goods.
 
-The data is separated into various XLXS files, one for each month. We will combine these files into a single data set, while also dropping columns that are not relevant for our analysis. We will also drop indent levels of 4 and above, as these are subcategories of the main categories we are interested in.
+The data is separated into various XLXS files, one for each month. We will combine these files into a single data set, while also dropping columns that are not relevant for our analysis.
 
 Relevant columns for data processing include: - `Expenditure category`: Category of goods - `Unadjusted percent change`: Inflation rate change year on year for the category
 
-For our data processing purposes, we will only retain rows where `Expenditure category` is one of the following: - `All items`: Overall inflation - `Airline fares`: Airfare - `New and used motor vehicles`: Cars - `Apparel`: Clothing - `Shelter`: Housing costs - `Meats, poultry, fish, and eggs`: Meat and eggs
+For our data processing purposes, we will only retain rows where `Expenditure category` is one of the following: - `All items`: Overall inflation - `Airline fares`: Airfare - `New and used motor vehicles`: Cars - `Apparel`: Clothing - `Shelter`: Housing costs - `Meats, poultry, fish, and eggs`: Meat and eggs - `Gasoline`: Gas
 
-We will then pivot the data to a wide format, with each row representing a category of goods and each column representing the year and month of the inflation rate change year on year.
 
 ```{r}
 #| label: merge-files
@@ -60,6 +59,7 @@ xlsx_files <- list.files(path = "data/raw/cpi", pattern = "*.xlsx", full.names =
 
 # Filter out temporary files
 xlsx_files <- xlsx_files[!grepl("~\\$", xlsx_files)]
+
 #print("2nd")
 #head(xlsx_files)
 
@@ -80,33 +80,23 @@ inflation_data <- map_dfr(xlsx_files,function(file) {
 #head(inflation_data)
 
 
-# Keep only the categories we are interested in, TBD list:
-# what is on NBC's chart -> csv column name
-# overall inflation -> All items
-# airfare  -> airline fares
-# cars -> New and used motor vehicles
-# clothing -> Apparel
-# electricity -> from another dataset
-# gas -> from another dataset
-# housing costs -> shelter
-# meat and eggs -> Meats, poultry, fish, and eggs
-
-
-keep_categories <- c("All items", "Airline fares", "New and used motor vehicles", "Apparel", "Shelter", "Meats, poultry, fish, and eggs")
+# Keep only the categories we are interested in
+keep_categories <- c("All items", "Airline fares", "New and used motor vehicles", "Apparel", "Shelter", "Meats, poultry, fish, and eggs", "Gasoline ")
 filtered_data <- inflation_data %>%
   filter(expenditure_category %in% keep_categories)
 print("filtered data:")
 View(filtered_data)
 ```
 
-For the next step, we will merge the data with the data on electricity and gas prices, which are not included in the original data set.
+For the next step, we will merge the data with the data on electricity price, which is not included in the original data set.
 
-We chose to use Residential Average Price of Electricity in cents per Kilowatt hour for the U.S as we do not want to focus on commercial or industrial pr
+We chose to use Residential Average Price of Electricity in cents per Kilowatt hour for the U.S as we do not want to focus on commercial or industrial prices.
+
 
 ```{r}
-#| label: merge-electricity-gas
+#| label: merge-electricity
 #| 
-# Get a list of all the XLSX file paths
+# Get a list of all the energy XLSX file paths
 xlsx_files <- list.files(path = "data/raw/energy", pattern = "*.xlsx", full.names = TRUE)
 
 energy_data <- map_dfr(xlsx_files,function(file) { 
@@ -120,10 +110,19 @@ energy_data <- map_dfr(xlsx_files,function(file) {
                 month = str_extract(basename(file), "\\d{2}(?!\\d)"),
                 expenditure_category = "Energy")  # Extract month from file name |>
 })
+# drop the current_price and previous_price columns
 energy_data <- energy_data |>
   select(expenditure_category, percent_change, year, month)
 
+# merge the data
 merged_data <- bind_rows(filtered_data, energy_data)
+
+```
+Finally, We then pivot the data to a wide format, with each row representing a category of goods and each column representing the year and month of the inflation rate change year on year.
+We then save the data to a CSV file for visualization and to avoid running the data processing code again as it is time consuming.
+```{r}
+#| label: pivot-data
+#| echo: false
 
 # Pivot the data to wide format
 wide_data <- merged_data %>%
@@ -132,8 +131,8 @@ wide_data <- merged_data %>%
               values_from = c(percent_change), 
               names_sep = "/")
 write_csv(wide_data, "data/merged/filtered_wide_inflation_data.csv")
-
 ```
+
 
 ```{r}
 
