@@ -3,7 +3,14 @@ title: "inflation_vis"
 format: html
 editor: visual
 ---
+# Imports and Packages
+```{r}
+library(readxl)
+library(tidyverse)
+library(pheatmap)
+```
 
+# Data Import
 ```{r}
 
 # Read in the wide data
@@ -14,6 +21,8 @@ inflation_matrix <- as.matrix(wide_data[, -1])  # Remove the first column (expen
 rownames(inflation_matrix) <- wide_data$expenditure_category  # Set the row names to the expenditure categories
 print(inflation_matrix)
 ```
+
+
 ```{r}
 # Plot the heatmap
 pheatmap(inflation_matrix,
@@ -26,7 +35,7 @@ pheatmap(inflation_matrix,
          fontsize_col = 8)
 ```
 
-
+# Data Analysis
 ```{r}
 # GGPlot implementatioin
 
@@ -55,7 +64,7 @@ print(long_data)
 print(covid_data)
 ```
 
-
+# Data Plot
 ```{r}
 # Plot the inflation rates over time with heatmap
 ggplot() +
