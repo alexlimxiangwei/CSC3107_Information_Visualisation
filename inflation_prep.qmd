@@ -50,7 +50,7 @@ For our data processing purposes, we will only retain rows where `Expenditure ca
 ```{r}
 #| label: merge-files
 #| echo: false
-
+#| include: false
 
 # Get a list of all the XLSX file paths
 xlsx_files <- list.files(path = "data/raw/cpi", pattern = "*.xlsx", full.names = TRUE)
@@ -78,7 +78,10 @@ inflation_data <- map_dfr(xlsx_files,function(file) {
 
 #print("inflation data:")
 #head(inflation_data)
+```
 
+
+```{r}
 
 # Keep only the categories we are interested in
 keep_categories <- c("All items", "Airline fares", "New and used motor vehicles", "Apparel", "Shelter", "Meats, poultry, fish, and eggs", "Gasoline ")
@@ -95,6 +98,7 @@ We chose to use Residential Average Price of Electricity in cents per Kilowatt h
 
 ```{r}
 #| label: merge-electricity
+#| include: false
 #| 
 # Get a list of all the energy XLSX file paths
 xlsx_files <- list.files(path = "data/raw/energy", pattern = "*.xlsx", full.names = TRUE)

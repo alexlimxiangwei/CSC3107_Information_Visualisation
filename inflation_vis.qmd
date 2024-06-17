@@ -17,25 +17,9 @@ library(scales)
 
 # Read in the wide data
 wide_data <- read_csv("data/merged/filtered_wide_inflation_data.csv")
-
-# Convert the data to a matrix format for heatmap
-inflation_matrix <- as.matrix(wide_data[, -1])  # Remove the first column (expenditure_category)
-rownames(inflation_matrix) <- wide_data$expenditure_category  # Set the row names to the expenditure categories
-print(inflation_matrix)
+wide_data
 ```
 
-
-```{r}
-# Plot the heatmap
-pheatmap(inflation_matrix,
-         cluster_rows = TRUE,
-         cluster_cols = TRUE,
-         show_rownames = TRUE,
-         show_colnames = TRUE,
-         main = "Inflation Rates for Selected Categories",
-         fontsize_row = 10,
-         fontsize_col = 8)
-```
 
 # Data Analysis
 ```{r}
@@ -66,7 +50,7 @@ print(long_data)
 print(covid_data)
 ```
 
-# Improved Data Plot
+# Initial Data Plot
 ```{r}
 # Plot the inflation rates over time with heatmap
 ggplot() +
