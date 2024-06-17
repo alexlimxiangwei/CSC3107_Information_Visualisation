@@ -8,6 +8,8 @@ editor: visual
 library(readxl)
 library(tidyverse)
 library(pheatmap)
+library(ggplot2)
+library(scales)
 ```
 
 # Data Import
@@ -64,7 +66,7 @@ print(long_data)
 print(covid_data)
 ```
 
-# Data Plot
+# Improved Data Plot
 ```{r}
 # Plot the inflation rates over time with heatmap
 ggplot() +
@@ -84,5 +86,29 @@ ggplot() +
 ```
 
 ```{r}
+
+# Ensure the 'month' in covid_data is a factor for proper alignment with non-date format
+covid_data <- covid_data |> mutate(month = as.factor(month))
+
+# Create the plot
+ggplot() +
+  # Inflation rate tiles
+  geom_tile(data = long_data, aes(x = date, y = expenditure_category, fill = inflation_rate), color = "white") +
+  # COVID data line
+  geom_line(data = covid_data, aes(x = month, y = pct_change * 10, group = 1, color = "COVID Data"), size = 1) +
+  # Theme and formatting
+  theme_minimal() +
+  scale_fill_distiller(palette = "RdYlBu") +
+  scale_color_manual(values = c("COVID Data" = "red")) +
+  scale_x_discrete(breaks = levels(covid_data$month)[seq(1, length(levels(covid_data$month)), by = 3)]) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text.y = element_text(size = 10),
+        legend.position = "bottom") +
+  labs(title = "Inflation Rates for Selected Categories Over Time",
+       x = "Date",
+       y = "Expenditure Category",
+       fill = "Inflation Rate (%)",
+       color = "Data Type") +
+  guides(color = guide_legend(title = "Legend", override.aes = list(linetype = c("solid"))))
 
 ```
