@@ -134,22 +134,4 @@ write_csv(wide_data, "data/merged/filtered_wide_inflation_data.csv")
 ```
 
 
-```{r}
 
-# Read in the wide data
-wide_data <- read_csv("data/merged/filtered_wide_inflation_data.csv")
-
-# Convert the data to a matrix format for pheatmap
-inflation_matrix <- as.matrix(wide_data[, -1])  # Remove the first column (expenditure_category)
-rownames(inflation_matrix) <- wide_data$expenditure_category
-
-# Plot the heatmap
-pheatmap(inflation_matrix,
-         cluster_rows = TRUE,
-         cluster_cols = TRUE,
-         show_rownames = TRUE,
-         show_colnames = TRUE,
-         main = "Inflation Rates for Selected Categories",
-         fontsize_row = 10,
-         fontsize_col = 8)
-```

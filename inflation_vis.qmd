@@ -18,7 +18,7 @@ library(scales)
 # Read in the wide data
 wide_data <- read_csv("data/merged/filtered_wide_inflation_data.csv")
 
-# Convert the data to a matrix format for pheatmap
+# Convert the data to a matrix format for heatmap
 inflation_matrix <- as.matrix(wide_data[, -1])  # Remove the first column (expenditure_category)
 rownames(inflation_matrix) <- wide_data$expenditure_category  # Set the row names to the expenditure categories
 print(inflation_matrix)
