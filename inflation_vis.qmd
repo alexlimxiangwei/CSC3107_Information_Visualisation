@@ -11,6 +11,7 @@ library(readxl)
 library(tidyverse)
 library(ggplot2)
 library(scales)
+library(stringr)
 ```
 
 # Data Import
@@ -54,55 +55,77 @@ print(long_data)
 print(covid_data)
 ```
 
-# Initial Data Plot
-
+# Data Plot
 ```{r}
+#| label: plot-with-white-lines
+#| fig.width: 8
+#| fig.height: 4
+
+# Wrap long expenditure category labels
+long_data$expenditure_category <- str_wrap(long_data$expenditure_category, width = 20)
+
 # Plot the inflation rates over time with heatmap
 ggplot() +
-  geom_tile(data=long_data, aes(x = date, y = expenditure_category, fill = inflation_rate),color = "white") +
+  geom_tile(data=long_data, aes(x = date, y = expenditure_category, fill = inflation_rate), color = "white") +
   theme_minimal() +
   scale_fill_distiller(palette = "RdYlBu") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   theme(axis.text.x = element_blank())+
-  geom_line(data = covid_data, aes(x = month, y = total_cases*8, group = 1), color = "red", show.legend = TRUE) +
+  geom_line(data = covid_data, aes(x = month, y = total_cases * 8 + 0.5, group = 1, color = "Number of COVID-19 cases")) +
   scale_x_discrete(breaks = levels(covid_data$month)[seq(1, length(levels(covid_data$month)), by = 3)]) +
-  scale_color_manual(values = c("COVID Data" = "red")) +
+  scale_color_manual(values = c("Number of COVID-19 cases" = "red")) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        axis.text.y = element_text(size = 10),
-        legend.position = "bottom") +
-  labs(title = "Inflation Rates for Selected Categories Over Time",
-       x = "Date",
+        axis.text.y = element_text(size = 8),
+        legend.position = "right",
+        axis.title.x = element_text(vjust = -1, margin = margin(t = 10)),
+        plot.title = element_text(hjust = 0.5),
+        axis.title.y = element_text(vjust = 2)) +
+  labs(title = "Impact of COVID-19 on Inflation Rates for Selected Categories Over Time",
+       x = "Time",
        y = "Expenditure Category",
-       fill = "Inflation Percent Rate (%)",
+       fill = "Year-over-Year Price Change (%)",
        color = "Data Type") +
-  guides(color = guide_legend(title = "COVID Data Legend", override.aes = list(shape = NA)))
+  guides(color = guide_legend(title = "COVID-19 Label", override.aes = list(linetype = c("solid"))))
+
+
 
 ```
 
+## Plot with the grey lines
+
 ```{r}
+#| label: plot-with-grey-lines
+#| fig.width: 8
+#| fig.height: 4
 
-# Ensure the 'month' in covid_data is a factor for proper alignment with non-date format
-covid_data <- covid_data |> mutate(month = as.factor(month))
+# Wrap long expenditure category labels
+long_data$expenditure_category <- str_wrap(long_data$expenditure_category, width = 20)
 
-# Create the plot
+# Plot the inflation rates over time with heatmap
 ggplot() +
-  # Inflation rate tiles
-  geom_tile(data = long_data, aes(x = date, y = expenditure_category, fill = inflation_rate), color = "white") +
-  # COVID cases line graph
-  geom_line(data = covid_data, aes(x = month, y = pct_change * 10, group = 1, color = "COVID Data"), size = 1) +
-  # Theme and formatting
+  geom_tile(data=long_data, aes(x = date, y = expenditure_category, fill = inflation_rate), color = "grey90", size = 0.1) +
   theme_minimal() +
   scale_fill_distiller(palette = "RdYlBu") +
-  scale_color_manual(values = c("COVID Data" = "red")) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme(axis.text.x = element_blank())+
+  geom_line(data = covid_data, aes(x = month, y = total_cases * 8 + 0.5, group = 1, color = "Number of COVID-19 cases")) +
+  geom_rug(data = long_data, aes(x = date), sides = "b", color = "black", size = 0.5) +
   scale_x_discrete(breaks = levels(covid_data$month)[seq(1, length(levels(covid_data$month)), by = 3)]) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        axis.text.y = element_text(size = 10),
-        legend.position = "bottom") +
-  labs(title = "Inflation Rates for Selected Categories Over Time",
-       x = "Date",
+  scale_color_manual(values = c("Number of COVID-19 cases" = "red")) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 0.5),
+        axis.text.y = element_text(size = 8),
+        legend.position = "right",
+        axis.title.x = element_text(vjust = -1, margin = margin(t = 10)),
+        plot.title = element_text(hjust = 0.5),
+        axis.title.y = element_text(vjust = 2)) +
+  labs(title = "Impact of COVID-19 on Inflation Rates for Selected Categories Over Time",
+       x = "Time",
        y = "Expenditure Category",
-       fill = "Inflation Rate (%)",
+       fill = "Year-over-Year Price Change (%)",
        color = "Data Type") +
-  guides(color = guide_legend(title = "Legend", override.aes = list(linetype = c("solid"))))
+  guides(color = guide_legend(title = "COVID-19 Label", override.aes = list(linetype = c("solid")))) +
+  coord_cartesian(xlim = c(0, 51))
+
+
 
 ```

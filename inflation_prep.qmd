@@ -37,15 +37,13 @@ include_graphics("images/inflation-original-big.png")
 
 @Joella_Carman and @Nigel_Chiwaya based their visualization data on [Bureau of Labor Statistics](https://www.bls.gov/cpi/tables/supplemental-files/) and [Energy Information Administration](https://www.eia.gov/electricity/monthly/) data, available in XLXS format with each row representing a major category of goods.
 
-Instead of only May 2023 to Apr 2024, we will instead use data from Jan 2019 to Mar 2024.(No data for April 2024 for electricity yet)
-Having 5 years of data will give us a clearer picture of the inflation rates for the major categories of goods.
+Instead of only May 2023 to Apr 2024, we will instead use data from Jan 2019 to Mar 2024.(No data for April 2024 for electricity yet) Having 5 years of data will give us a clearer picture of the inflation rates for the major categories of goods.
 
 The data is separated into various XLXS files, one for each month. We will combine these files into a single data set, while also dropping columns that are not relevant for our analysis.
 
 Relevant columns for data processing include: - `Expenditure category`: Category of goods - `Unadjusted percent change`: Inflation rate change year on year for the category
 
 For our data processing purposes, we will only retain rows where `Expenditure category` is one of the following: - `All items`: Overall inflation - `Airline fares`: Airfare - `New and used motor vehicles`: Cars - `Apparel`: Clothing - `Shelter`: Housing costs - `Meats, poultry, fish, and eggs`: Meat and eggs - `Gasoline`: Gas
-
 
 ```{r}
 #| label: merge-files
@@ -80,7 +78,6 @@ inflation_data <- map_dfr(xlsx_files,function(file) {
 #head(inflation_data)
 ```
 
-
 ```{r}
 
 # Keep only the categories we are interested in
@@ -94,7 +91,6 @@ View(filtered_data)
 For the next step, we will merge the data with the data on electricity price, which is not included in the original data set.
 
 We chose to use Residential Average Price of Electricity in cents per Kilowatt hour for the U.S as we do not want to focus on commercial or industrial prices.
-
 
 ```{r}
 #| label: merge-electricity
@@ -122,8 +118,9 @@ energy_data <- energy_data |>
 merged_data <- bind_rows(filtered_data, energy_data)
 
 ```
-Finally, We then pivot the data to a wide format, with each row representing a category of goods and each column representing the year and month of the inflation rate change year on year.
-We then save the data to a CSV file for visualization and to avoid running the data processing code again as it is time consuming.
+
+Finally, We then pivot the data to a wide format, with each row representing a category of goods and each column representing the year and month of the inflation rate change year on year. We then save the data to a CSV file for visualization and to avoid running the data processing code again as it is time consuming.
+
 ```{r}
 #| label: pivot-data
 #| echo: false
@@ -136,6 +133,3 @@ wide_data <- merged_data %>%
               names_sep = "/")
 write_csv(wide_data, "data/merged/filtered_wide_inflation_data.csv")
 ```
-
-
-
