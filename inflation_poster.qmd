@@ -28,7 +28,11 @@ library(knitr)
 
 # Introduction
 
-Inflation, the rate at which the general level of prices for goods and services rises, eroding purchasing power, is a key economic indicator. It impacts everything from the cost of groceries to the interest rates on loans[^harvard_business_2024]. While moderate inflation is a sign of a growing economy, excessive inflation can reduce the value of money, leading to financial strain for consumers. In this project, we have built on a comprehensive visualization to monitor inflation across various consumer metrics in the USA, originally published by NBC News [^inflation_usa_2024] (@fig-nbc-on-poster). The visualization below shows monthly changes in consumer prices compared to the same time the previous year. Despite the visualization's effectiveness in showing an overview of the price changes, we aim to improve certain aspects to better highlight the underlying trend of inflation change in a year-over-year basis of different consumer metrics.
+Inflation, the rate at which the general level of prices for goods and services rises, eroding purchasing power, is a key economic indicator. It impacts everything from the cost of groceries to the interest rates on loans[^1]. While moderate inflation is a sign of a growing economy, excessive inflation can reduce the value of money, leading to financial strain for consumers. In this project, we have built on a comprehensive visualization to monitor inflation across various consumer metrics in the USA, originally published by NBC News [^2] (@fig-nbc-on-poster). The visualization below shows monthly changes in consumer prices compared to the same time the previous year. Despite the visualization's effectiveness in showing an overview of the price changes, we aim to improve certain aspects to better highlight the underlying trend of inflation change in a year-over-year basis of different consumer metrics.
+
+[^1]: https://www.hbs.edu/ris/Publication%20Files/Paper_Covid_Price_IMFER_23_4663bd2c-c1a8-4448-aa9f-98a3bc197142.pdf
+
+[^2]: <https://www.nbcnews.com/data-graphics/inflation-tracker-how-much-prices-rising-us-consumers-n1296378>
 
 # Previous Visualization
 
@@ -40,33 +44,15 @@ Inflation, the rate at which the general level of prices for goods and services 
 include_graphics("images/inflation-original.png")
 ```
 
-[^harvard_business_2024]:https://www.hbs.edu/ris/Publication%20Files/Paper_Covid_Price_IMFER_23_4663bd2c-c1a8-4448-aa9f-98a3bc197142.pdf
-[^inflation_usa_2024]: <https://www.nbcnews.com/data-graphics/inflation-tracker-how-much-prices-rising-us-consumers-n1296378>
-
 # Strengths
 
--   The plot title and subtitle is clear and informative, immediately
-    providing context and helping readers to understand the focus of the
-    visualization.
--   The heatmap design effectively conveys a high information content
-    without cluttering the plot. This allows for quick and intuitive
-    understanding of the data trends.
--   Pointing with the mouse at a tile opens an infotip, enabling readers
-    to retrieve specific incidence data for a given state and year
-    (@fig-infotip_color_change). The infotip only occludes a small
-    portion of the plot, and the partial transparency of the infotip
-    ensures visibility of the tiles underneath.
--   The colors chosen (red and blue) are color-blind friendly, ensuring
-    that the visualization is accessible to a wider audience.
--   The inclusion of detailed source information at the bottom of the
-    chart adds credibility and transparency to the data presented.
--   The overall design is user-friendly, with a clean layout, intuitive
-    color coding, and easy-to-read labels, making the visualization
-    accessible to a broad audience.
--   The color legend is clear and informative which helps readers to
-    quickly understand the meaning of the the colors (red-increasing
-    inflation, blue-decreasing inflation) and the range of percentage
-    changes displayed.
+-   The plot title and subtitle is clear and informative, immediately providing context and helping readers to understand the focus of the visualization.
+-   The heatmap design effectively conveys a high information content without cluttering the plot. This allows for quick and intuitive understanding of the data trends.
+-   Pointing with the mouse at a tile opens an infotip, enabling readers to retrieve specific incidence data for a given state and year (@fig-infotip_color_change). The infotip only occludes a small portion of the plot, and the partial transparency of the infotip ensures visibility of the tiles underneath.
+-   The colors chosen (red and blue) are color-blind friendly, ensuring that the visualization is accessible to a wider audience.
+-   The inclusion of detailed source information at the bottom of the chart adds credibility and transparency to the data presented.
+-   The overall design is user-friendly, with a clean layout, intuitive color coding, and easy-to-read labels, making the visualization accessible to a broad audience.
+-   The color legend is clear and informative which helps readers to quickly understand the meaning of the the colors (red-increasing inflation, blue-decreasing inflation) and the range of percentage changes displayed.
 
 ```{r}
 #| label: fig-infotip_color_change
@@ -83,52 +69,37 @@ include_graphics("images/inflation-original.png")
 
     Information like:
 
-    -   Inflation was due to major events like COVID-19, recessions, or
-        weather changes (e.g. hotter/colder seasons)
+    -   Inflation was due to major events like COVID-19, recessions, or weather changes (e.g. hotter/colder seasons)
     -   Inflation in different geographical locations
 
-2.  *Varying the size of the square boxes* to convey additional
-    information (e.g. size of industry, as each category has varying
-    impacts on the economy.
+2.  *Varying the size of the square boxes* to convey additional information (e.g. size of industry, as each category has varying impacts on the economy.
 
-3.  *Incorporate mirrored histograms, stacked histograms, or separate
-    histograms* to present the data more effectively.
+3.  *Incorporate mirrored histograms, stacked histograms, or separate histograms* to present the data more effectively.
 
-4.  *Shade areas* to represent significant events such as recessions or
-    the COVID-19 pandemic.
+4.  *Shade areas* to represent significant events such as recessions or the COVID-19 pandemic.
 
-5.  *Add an interactive straight line* for readers to follow across the
-    graph, enhancing readability and comprehension.
+5.  *Add an interactive straight line* for readers to follow across the graph, enhancing readability and comprehension.
 
-6.  *Add a category like "Others"* to capture data that does not fit
-    into the predefined categories, ensuring completeness.
+6.  *Add a category like "Others"* to capture data that does not fit into the predefined categories, ensuring completeness.
 
 # Implementation
 
 ## Data
 
--   Weekly counts of measles cases by state were obtained from Project
-    Tycho.[^1] The data have missing weeks, which were treated as zero
-    in @fig-wsj-on-poster, potentially underestimating the annual total.
-    Instead, we calculated the weekly mean case count on the basis of
-    non-missing data only.
--   Decennial U.S. census data for each state.[^2]
-
-[^1]: <https://doi.org/10.25337/T7/ptycho.v2.0/US.14189004>
-
-[^2]: <https://www.stats.indiana.edu/population/PopTotals/historic_counts_states.asp>
+-   **Data Source:** The data used for this project is based on the visualization data from @Joella_Carman and @Nigel_Chiwaya, featured on @NBC_News. They utilized the information from the Bureau of Labor Statistics and Energy Information Administration data to depict year-over-year inflation for major categories of goods.
+-   **Data Period:** Our analysis makes use of data from January 2019 to March 2024, rather than the initial period from May 2023 to April 2024. With this longer time frame, the inflation rates for the chosen main product groups are more clearly displayed.
 
 ## Software
 
-We used the Quarto publication framework and the R programming language,
-along with the following third-party packages:
+We used the Quarto publication framework and the R programming language, along with the following third-party packages:
 
 -   *readxl* for data import
--   *tidyverse* for data transformation, including *ggplot2* for
-    visualization based on the grammar of graphics
+-   *tidyverse* for data transformation, including *ggplot2* for visualization based on the grammar of graphics
 -   *knitr* for dynamic document generation
--   *zoo* for interpolating annual population data from the decennial
-    U.S. census
+-   *purrr* for functional programming tools
+-   *pheatmap* for creating heatmaps and having more control over the dimensions and appearance
+-   *scales* for additional scaling functions
+-   *stringr* for string manipulation
 
 ```{=typst}
 #v(2em)
@@ -137,21 +108,8 @@ along with the following third-party packages:
 
 # Further Suggestions for Interactivity
 
-Because our visualization was intended for a poster, we did not
-implement any interactive features, including the infotip. However, if
-the data are visualized in an HTML document, interactive features can be
-achieved using the R packages such as *plotly*. In that case, we
-recommend that the tile does not change its fill color. In contrast, the
-original visualization changes the fill color of the activated tile to
-light blue (see @fig-infotip_color_change), which can be misinterpreted
-as a change in incidence. Instead, we suggest highlighting the activated
-tile by thickening its border.
+Because our visualization was intended for a poster, we did not implement any interactive features, including the infotip. However, if the data are visualized in an HTML document, interactive features can be achieved using the R packages such as *plotly*. In that case, we recommend that the tile does not change its fill color. In contrast, the original visualization changes the fill color of the activated tile to light blue (see @fig-infotip_color_change), which can be misinterpreted as a change in incidence. Instead, we suggest highlighting the activated tile by thickening its border.
 
 # Conclusion
 
-We successfully implemented all suggested improvements for the
-non-interactive visualization. By labeling every state and choosing a
-colorblind-friendly palette, the revised plot is more accessible. The
-logarithmic color scale makes the decrease in incidence after the
-introduction of the vaccine less striking but enables readers to detect
-patterns in the low-incidence range more easily.
+We successfully implemented all suggested improvements for the non-interactive visualization. By labeling every state and choosing a colorblind-friendly palette, the revised plot is more accessible. The logarithmic color scale makes the decrease in incidence after the introduction of the vaccine less striking but enables readers to detect patterns in the low-incidence range more easily.
