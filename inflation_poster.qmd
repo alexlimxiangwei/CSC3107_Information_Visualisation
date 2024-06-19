@@ -9,7 +9,8 @@ format:
     footer-text: "Information Visualization 2024"
     footer-emails: "michael.gastner@singaporetech.edu.sg"
     footer-color: "ebcfb2"
-    
+    keep-typ: true
+ 
 execute:
   echo: false
 knitr:
@@ -22,8 +23,10 @@ knitr:
 #| include: false
 
 library(knitr)
-#purl("measles_prep.qmd")
-#source("measles_prep.R")
+purl("inflation_prep.qmd")
+source("inflation_prep.R")
+purl("inflation_vis.qmd")
+source("inflation_vis.R")
 ```
 
 # Introduction
@@ -105,6 +108,38 @@ We used the Quarto publication framework and the R programming language, along w
 #v(2em)
 ```
 # Improved Visualization
+```{r}
+#| label: plot-with-white-lines-2
+#| fig.width: 8
+#| fig.height: 4
+
+# Wrap long expenditure category labels
+long_data$expenditure_category <- str_wrap(long_data$expenditure_category, width = 20)
+
+# Plot the inflation rates over time with heatmap
+ggplot() +
+  geom_tile(data=long_data, aes(x = date, y = expenditure_category, fill = inflation_rate), color = "white") +
+  theme_minimal() +
+  scale_fill_distiller(palette = "RdYlBu") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme(axis.text.x = element_blank())+
+  geom_line(data = covid_data, aes(x = month, y = total_cases * 8 + 0.5, group = 1, color = "Number of COVID-19 cases")) +
+  scale_x_discrete(breaks = levels(covid_data$month)[seq(1, length(levels(covid_data$month)), by = 3)]) +
+  scale_color_manual(values = c("Number of COVID-19 cases" = "red")) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text.y = element_text(size = 8),
+        legend.position = "right",
+        axis.title.x = element_text(vjust = -1, margin = margin(t = 10)),
+        plot.title = element_text(hjust = 0.5),
+        axis.title.y = element_text(vjust = 2)) +
+  labs(title = "Impact of COVID-19 on Inflation Rates for Selected Categories Over Time",
+       x = "Time",
+       y = "Expenditure Category",
+       fill = "Year-over-Year Price Change (%)",
+       color = "Data Type") +
+  guides(color = guide_legend(title = "COVID-19 Label", override.aes = list(linetype = c("solid"))))
+
+```
 
 # Further Suggestions for Interactivity
 
@@ -112,4 +147,4 @@ Because our visualization was intended for a poster, we did not implement any in
 
 # Conclusion
 
-We successfully implemented all suggested improvements for the non-interactive visualization. By labeling every state and choosing a colorblind-friendly palette, the revised plot is more accessible. The logarithmic color scale makes the decrease in incidence after the introduction of the vaccine less striking but enables readers to detect patterns in the low-incidence range more easily.
+We successfully implemented the suggested improvements for the non-interactive visualization, including adding layers of information about major events like COVID-19 and its impact on inflation rates across various categories, providing a richer contextual understanding of the data. Our continuous timeline and intuitive heat map color gradient from blue to red effectively illustrate trends and changes over time. Furthermore, The inclusion of COVID-19 case data adds depth, highlighting correlations between the pandemic and inflation fluctuations. These enhancements make the improved visualization more comprehensive and insightful, effectively illustrating trends and correlations over time.

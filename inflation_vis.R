@@ -1,31 +1,19 @@
----
-title: "inflation_vis"
-format: html
-editor: visual
----
-
-# Imports and Packages
-
-```{r}
+## -----------------------------------------------------------------------------
 library(readxl)
 library(tidyverse)
 library(ggplot2)
 library(scales)
 library(stringr)
-```
 
-# Data Import
 
-```{r}
+## -----------------------------------------------------------------------------
 
 # Read in the wide data
 wide_data <- read_csv("data/merged/filtered_wide_inflation_data.csv")
 wide_data
-```
 
-# Data Analysis
 
-```{r}
+## -----------------------------------------------------------------------------
 # GGPlot implementatioin
 
 # Making long
@@ -53,11 +41,9 @@ covid_data <- covid_data |>
 
 print(long_data)
 print(covid_data)
-```
 
-# Data Plot
 
-```{r}
+## -----------------------------------------------------------------------------
 #| label: plot-with-white-lines
 #| fig.width: 8
 #| fig.height: 4
@@ -90,11 +76,9 @@ ggplot() +
 
 
 
-```
 
-## Plot with the grey lines
 
-```{r}
+## -----------------------------------------------------------------------------
 #| label: plot-with-grey-lines
 #| fig.width: 8
 #| fig.height: 4
@@ -129,4 +113,4 @@ ggplot() +
 
 
 
-```
+
