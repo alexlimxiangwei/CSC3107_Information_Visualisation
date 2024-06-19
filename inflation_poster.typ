@@ -390,7 +390,7 @@
   
 
   // University logo's scale (in %).
-  
+   univ_logo_scale: 50, 
 
   // University logo's column size (in in).
   
