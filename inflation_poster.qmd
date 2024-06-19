@@ -86,7 +86,7 @@ include_graphics("images/inflation-original.png")
 
 ## Data
 
--   **Data Source:** The data used for this project is based on the visualization data from @Joella_Carman and @Nigel_Chiwaya, featured on @NBC_News. They utilized the information from the Bureau of Labor Statistics and Energy Information Administration data to depict year-over-year inflation for major categories of goods.
+-   **Data Source:** The data used for this project is based on the visualization data from Joella Carman and Nigel Chiwaya, featured on NBC News. They utilized the information from the Bureau of Labor Statistics and Energy Information Administration data to depict year-over-year inflation for major categories of goods.
 -   **Data Period:** Our analysis makes use of data from January 2019 to March 2024, rather than the initial period from May 2023 to April 2024. With this longer time frame, the inflation rates for the chosen main product groups are more clearly displayed.
 
 ## Software
