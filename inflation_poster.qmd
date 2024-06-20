@@ -3,12 +3,12 @@ title: Inflation in the USA
 format:
   poster-typst: 
     size: "33x23" # Approximately A1
-    poster-authors: "Michael T. Gastner"
-    departments: "Information and Communication Technologies"
+    poster-authors: "Loh Xian Ming Jeremiah, Wong Zhen Line, Veleon Lim Ming Zhe, Farah Binte Mohamed Tajudeen, Lim Xiang Wei Alex, Javier Ng Wei Cheng"
+    departments: "Computing Science"
     institution-logo: "./images/sit-logo.png"
     univ-logo-scale: 50
     footer-text: "Information Visualization 2024"
-    footer-emails: "michael.gastner@singaporetech.edu.sg"
+    footer-emails: "singaporetech.edu.sg"
     footer-color: "ebcfb2"
     keep-typ: true
  
@@ -111,8 +111,8 @@ We used the Quarto publication framework and the R programming language, along w
 # Improved Visualization
 ```{r}
 #| label: plot-with-white-lines-2
-#| fig.width: 8
-#| fig.height: 4
+#| fig.width: 10
+#| fig.height: 5
 
 # Wrap long expenditure category labels
 long_data$expenditure_category <- str_wrap(long_data$expenditure_category, width = 20)

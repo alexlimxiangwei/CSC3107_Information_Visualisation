@@ -355,8 +355,8 @@
 #show: doc => poster(
    title: [Inflation in the USA], 
   // TODO: use Quarto's normalized metadata.
-   authors: [Michael T. Gastner], 
-   departments: [Information and Communication Technologies], 
+   authors: [Loh Xian Ming Jeremiah, Wong Zhen Line, Veleon Lim Ming Zhe, Farah Binte Mohamed Tajudeen, Lim Xiang Wei Alex, Javier Ng Wei Cheng], 
+   departments: [Computing Science], 
    size: "33x23", 
 
   // Institution logo.
@@ -371,7 +371,7 @@
   
 
   // Emails of the authors.
-   footer_email_ids: [michael.gastner\@singaporetech.edu.sg], 
+   footer_email_ids: [singaporetech.edu.sg], 
 
   // Color of the footer.
    footer_color: "ebcfb2", 
@@ -491,7 +491,7 @@ We used the Quarto publication framework and the R programming language, along w
 <improved-visualization>
 #block[
 #block[
-#box(width: 576.0pt, image("inflation_poster_files/figure-typst/plot-with-white-lines-2-1.svg"))
+#box(width: 720.0pt, image("inflation_poster_files/figure-typst/plot-with-white-lines-2-1.svg"))
 
 ]
 ]
