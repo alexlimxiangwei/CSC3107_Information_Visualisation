@@ -423,11 +423,11 @@ Inflation, the rate at which the general level of prices for goods and services 
 #block[
 #block[
 #figure([
-#box(width: 90%,image("images/inflation-original.png"))
+#box(width: 100%,image("images/inflation-original-big.png"))
 ], caption: figure.caption(
 position: bottom, 
 [
-Yearly Percentage Change in Consumer Prices for major catergories of goods in the USA, published by NBC News.
+Yearly Perntage Change in Consumer Prices for major catergories of goods in the USA, published by NBC News.
 ]), 
 kind: "quarto-float-fig", 
 supplement: "Figure", 
@@ -491,7 +491,7 @@ We used the Quarto publication framework and the R programming language, along w
 <improved-visualization>
 #block[
 #block[
-#box(width: 720.0pt, image("inflation_poster_files/figure-typst/plot-with-white-lines-2-1.svg"))
+#box(width: 792.0pt, image("inflation_poster_files/figure-typst/plot-with-white-lines-2-1.svg"))
 
 ]
 ]

@@ -42,10 +42,9 @@ Inflation, the rate at which the general level of prices for goods and services 
 
 ```{r}
 #| label: fig-nbc-on-poster
-#| fig-cap: "Yearly Percentage Change in Consumer Prices for major catergories of goods in the USA, published by NBC News."
-#| out-width: 90%
-
-include_graphics("images/inflation-original.png")
+#| fig-cap: "Yearly Perntage Change in Consumer Prices for major catergories of goods in the USA, published by NBC News."
+#| out-width: "100%"
+include_graphics("images/inflation-original-big.png")
 ```
 
 # Strengths
@@ -58,14 +57,6 @@ include_graphics("images/inflation-original.png")
 -   The overall design is user-friendly, with a clean layout, intuitive color coding, and easy-to-read labels, making the visualization accessible to a broad audience.
 -   The color legend is clear and informative which helps readers to quickly understand the meaning of the the colors (red-increasing inflation, blue-decreasing inflation) and the range of percentage changes displayed.
 
-```{r}
-#| label: fig-infotip_color_change
-#| fig-cap: "Zoomed-in screenshot of the original plot with and without
-#|   activated infotip."
-#| out-width: 100%
-
-#include_graphics("images/infotip_color_change.png")
-```
 
 # Suggested Improvements
 
@@ -109,10 +100,11 @@ We used the Quarto publication framework and the R programming language, along w
 #v(2em)
 ```
 # Improved Visualization
+
 ```{r}
 #| label: plot-with-white-lines-2
-#| fig.width: 10
-#| fig.height: 5
+#| fig-width: 11
+#| fig-height: 5
 
 # Wrap long expenditure category labels
 long_data$expenditure_category <- str_wrap(long_data$expenditure_category, width = 20)
