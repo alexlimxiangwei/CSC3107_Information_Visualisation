@@ -41,29 +41,40 @@ include_graphics("images/inflation-original-big.png")
 
 @Joella_Carman and @Nigel_Chiwaya based their visualization data on [Bureau of Labor Statistics](https://www.bls.gov/cpi/tables/supplemental-files/) and [Energy Information Administration](https://www.eia.gov/electricity/monthly/) data, available in XLXS format with each row representing a major category of goods.
 
-Instead of only May 2023 to Apr 2024, we will instead use data from Jan 2019 to Mar 2024.(No data for April 2024 for electricity yet) Having 5 years of data will give us a clearer picture of the inflation rates for the major categories of goods.
+Instead of only May 2023 to Apr 2024, we will instead use data from Jan 2019 to Jan 2024. Having 5 years of data will give us a clearer picture of the inflation rates for the major categories of goods.
 
 The data is separated into various XLXS files, one for each month. We will combine these files into a single data set, while also dropping columns that are not relevant for our analysis.
 
 Relevant columns for data processing include: - `Expenditure category`: Category of goods - `Unadjusted percent change`: Inflation rate change year on year for the category
 
-For our data processing purposes, we will only retain rows where `Expenditure category` is one of the following: - `All items`: Overall inflation - `Airline fares`: Airfare - `New and used motor vehicles`: Cars - `Apparel`: Clothing - `Shelter`: Housing costs - `Meats, poultry, fish, and eggs`: Meat and eggs - `Gasoline`: Gas
+For our data processing purposes, we will only retain rows where `Expenditure category` is one of the following:
+
+-    `All items`: Overall inflation
+
+-   `Airline fares`: Airfare
+
+-   `New and used motor vehicles`: Cars
+
+-   `Apparel`: Clothing
+
+-   `Shelter`: Housing costs
+
+-   `Meats, poultry, fish, and eggs`: Meat and eggs
+
+-   `Gasoline`: Gas
+
+These categories are in line with those in the original plot shown in @NBC_News.
 
 ```{r}
 #| label: merge-files
 #| echo: false
 #| include: false
 
-# Get a list of all the XLSX file paths
+# Get a list of all Consumer Price Index(CPI) XLSX file paths
 xlsx_files <- list.files(path = "data/raw/cpi", pattern = "*.xlsx", full.names = TRUE)
-#print("1st")
-#head(xlsx_files)
 
 # Filter out temporary files
 xlsx_files <- xlsx_files[!grepl("~\\$", xlsx_files)]
-
-#print("2nd")
-#head(xlsx_files)
 
 # Read and combine the XLSX files, selecting the desired columns and skipping rows
 # We also add columns for year and month of data
@@ -74,54 +85,41 @@ inflation_data <- map_dfr(xlsx_files,function(file) {
            percent_change = 4)|>
       mutate(year = str_extract(basename(file), "\\d{4}"),  # Extract year from file name
       month = str_extract(basename(file), "\\d{2}(?!\\d)"),  # Extract month from file name
-      expenditure_category = str_replace(expenditure_category, "\\(.*", ""))|>  # Remove parentheses and text inside
+      expenditure_category = str_replace(expenditure_category, "\\(.*", ""))|>  # Remove parentheses and text inside to simplify category names
       filter(!is.na(expenditure_category))  # Remove rows with NA in expenditure_category
 })
-
-#print("inflation data:")
-#head(inflation_data)
-```
-
-```{r}
 
 # Keep only the categories we are interested in
 keep_categories <- c("All items", "Airline fares", "New and used motor vehicles", "Apparel", "Shelter", "Meats, poultry, fish, and eggs", "Gasoline ")
 filtered_data <- inflation_data %>%
   filter(expenditure_category %in% keep_categories)
-
-View(filtered_data)
 ```
 
-For the next step, we will merge the data with the data on electricity price, which is not included in the original data set.
+For the next step, we will merge the data with the data on [electricity price](https://www.eia.gov/electricity/monthly/), which is not included in the original data set.
 
 We chose to use Residential Average Price of Electricity in cents per Kilowatt hour for the U.S as we do not want to focus on commercial or industrial prices.
 
 ```{r}
 #| label: merge-electricity-data
 #| include: false
-#| 
-# Get a list of all the energy XLSX file paths
+# Get a list of all the energy data XLSX file paths
 xlsx_files <- list.files(path = "data/raw/energy", pattern = "*.xlsx", full.names = TRUE)
 
-energy_data <- map_dfr(xlsx_files,function(file) { 
-  #only read row 66, rest are irrelevant
-  read_excel(file, skip = 64, n_max = 1) |>
-    # Select the relevant columns
-    select(current_price = 2,
-           previous_price = 3) |>
-          mutate(percent_change = round((current_price - previous_price) / previous_price * 100, 1),
-                year = str_extract(basename(file), "\\d{4}"),  # Extract year from file name
-                month = str_extract(basename(file), "\\d{2}(?!\\d)"),
-                expenditure_category = "Energy")  # Extract month from file name |>
+# Read and combine the XLSX files, calculate percentage change of energy
+energy_data <- map_dfr(xlsx_files, ~{
+  read_excel(.x, skip = 64, n_max = 1) %>%
+    select(current_price = 2, previous_price = 3) %>%
+    transmute(
+      expenditure_category = "Energy",
+      percent_change = round((current_price - previous_price) / previous_price * 100, 1),
+      # Add year and month of each data point
+      year = str_extract(basename(.x), "\\d{4}"),
+      month = str_extract(basename(.x), "\\d{2}(?!\\d)")
+    )
 })
-# drop the current_price and previous_price columns
-energy_data <- energy_data |>
-  select(expenditure_category, percent_change, year, month)
-View(energy_data)
-# merge the data
-merged_data <- bind_rows(filtered_data, energy_data)
 
-View(merged_data)
+# Merge filtered CPI data and energy data
+merged_data <- bind_rows(filtered_data, energy_data)
 
 ```
 
@@ -130,13 +128,14 @@ Finally, We then pivot the data to a wide format, with each row representing a c
 ```{r}
 #| label: pivot-data-to-wide
 #| echo: false
-
+#| 
 # Pivot the data to wide format
 wide_data <- merged_data %>%
   unite(year_month, year, month, sep = "/") %>%
   pivot_wider(names_from = year_month, 
               values_from = c(percent_change), 
               names_sep = "/")
+#save the csv file
 write_csv(wide_data, "data/merged/filtered_wide_inflation_data.csv")
 
 # View the wide data
@@ -145,7 +144,7 @@ View(wide_data)
 
 # TODO: Talk about the Covid data, how it is processed.
 
-We suspected the COVID-19 pandemic might have affected the inflation rates for the selected categories. Hence, we obtained another set of data from daily reported COVID-19 cases from [World Health Organization](https://data.who.int/dashboards/covid19/data/), which contains the total number of COVID-19 cases reported daily, from Jan 2020 to June 2024. 
+We suspected the COVID-19 pandemic might have affected the inflation rates for the selected categories. Hence, we obtained another set of data from daily reported COVID-19 cases from [World Health Organization](https://data.who.int/dashboards/covid19/data/), which contains the total number of COVID-19 cases reported daily, from Jan 2020 to June 2024.
 
 We filtered the data to only include the United States of America and calculated the total number of COVID-19 cases reported each month. We then normalized the total cases to fit the 0.00 to 1.00 range for visualization purposes. To align the COVID-19 data with the inflation data, we removed the last 5 months of data to only include up to Jan 2024.
 
