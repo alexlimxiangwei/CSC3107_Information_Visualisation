@@ -123,26 +123,25 @@ merged_data <- bind_rows(filtered_data, energy_data)
 
 ```
 
-Finally, We then pivot the data to a wide format, with each row representing a category of goods and each column representing the year and month of the inflation rate change year on year. We then save the data to a CSV file for visualization and to avoid running the data processing code again as it is time consuming.
+Finally, We then unite the year and month columns into one date column for ease of visualization and rename percent_change into inflation_rate.
+
+We also wrap long category labels to prevent long category names from overlapping or extending beyond the plotting area.
 
 ```{r}
-#| label: pivot-data-to-wide
+#| label: finalise-long-data
 #| echo: false
-#| 
-# Pivot the data to wide format
-wide_data <- merged_data %>%
-  unite(year_month, year, month, sep = "/") %>%
-  pivot_wider(names_from = year_month, 
-              values_from = c(percent_change), 
-              names_sep = "/")
-#save the csv file
-write_csv(wide_data, "data/merged/filtered_wide_inflation_data.csv")
 
-# View the wide data
-View(wide_data)
+# 
+long_data <- merged_data %>%
+  unite(date, year, month, sep = "/") %>%
+  rename(inflation_rate = percent_change)
+
+# Wrap long expenditure category labels
+long_data$expenditure_category <- str_wrap(long_data$expenditure_category, width = 20)
+view(long_data)
 ```
 
-# COVID-19 data for contextualization
+#  COVID-19 data for contextualization
 
 To enhance our understanding of inflation trends, we are incorporating COVID-19 data as a contextual variable. This additional dataset, sourced from the [World Health Organization](https://data.who.int/dashboards/covid19/data/), comprises daily reported COVID-19 cases from January 2020 to January 2024. By integrating this information, we aim to provide a more comprehensive perspective on the factors potentially influencing inflation patterns during this period. This data enrichment allows us to explore possible correlations between the pandemic's progression and observed economic fluctuations, thereby offering a more nuanced analysis of inflationary trends.
 
@@ -151,12 +150,6 @@ We filtered the data to only include the United States of America and calculated
 ```{r}
 #| label: merge-covid-data
 #| include: false
-
-# Pivot inflation data to long format
-long_data <- wide_data %>%
-  pivot_longer(cols = -expenditure_category, names_to = "date", values_to = "inflation_rate")
-
-View(long_data)
 
 covid_data <- read_csv("data/raw/covid/WHO-COVID-19-global-data.csv")
 
@@ -183,12 +176,6 @@ View(covid_data)
 #| label: improved-visualisation
 #| fig.width: 11
 #| fig.height: 5
-
-# Reshape the data from wide to long format
-long_data <- pivot_longer(wide_data, cols = -expenditure_category, names_to = "date", values_to = "inflation_rate")
-
-# Wrap long expenditure category labels
-long_data$expenditure_category <- str_wrap(long_data$expenditure_category, width = 20)
 
 # Create a mapping for expenditure categories to continuous y-values
 unique_categories <- unique(long_data$expenditure_category)
