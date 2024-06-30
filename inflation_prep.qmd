@@ -151,7 +151,7 @@ write_csv(long_data, "data/merged/inflation_data.csv")
 
 To enhance our understanding of inflation trends, we are incorporating COVID-19 data as a contextual variable. This additional dataset, sourced from the [World Health Organization](https://data.who.int/dashboards/covid19/data/), comprises daily reported COVID-19 cases from January 2020 to January 2024. By integrating this information, we aim to provide a more comprehensive perspective on the factors potentially influencing inflation patterns during this period. This data enrichment allows us to explore possible correlations between the pandemic's progression and observed economic fluctuations, thereby offering a more nuanced analysis of inflationary trends.
 
-We filtered the data to only include the United States of America and calculated the total number of COVID-19 cases reported each month. We then normalized the total cases to fit the 0.00 to 1.00 range for visualization purposes. To align the COVID-19 data with the inflation data, we removed the last 5 months of data to only include up to Jan 2024.
+We filtered the data to only include the United States of America and calculated the total number of COVID-19 cases reported each month. We then normalized the total cases to fit the 0.00 to 1.00 range for visualization purposes. To align the COVID-19 data with the inflation data, we removed the last 5 months of data to only include up to Jan 2024. We save the csv for future use at the end.
 
 ```{r}
 #| label: merge-covid-data
@@ -173,7 +173,8 @@ covid_data <- covid_data |>
   mutate(total_cases = (total_cases - min(total_cases, na.rm = TRUE)) / (max(total_cases, na.rm = TRUE) - min(total_cases, na.rm =TRUE))) |>
   slice(1:(n() - 5)) # Remove the 5 months data to only include up to Jan 2024
 
-View(covid_data)
+#Save the csv
+write_csv(covid_data, "data/merged/covid_data.csv")
 ```
 
 # Improved Plot - to be improved and copied to the poster
