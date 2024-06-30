@@ -92,7 +92,6 @@ We used the Quarto publication framework and the R programming language, along w
 -   *tidyverse* for data transformation, including *ggplot2* for visualization based on the grammar of graphics
 -   *knitr* for dynamic document generation
 -   *purrr* for functional programming tools
--   *pheatmap* for creating heatmaps and having more control over the dimensions and appearance
 -   *scales* for additional scaling functions
 -   *stringr* for string manipulation
 
@@ -102,22 +101,28 @@ We used the Quarto publication framework and the R programming language, along w
 # Improved Visualization
 
 ```{r}
-#| label: plot-with-white-lines-2
-#| fig-width: 11
-#| fig-height: 5
+#| label: plot-with-white-lines
+#| fig.width: 11
+#| fig.height: 5
 
 # Wrap long expenditure category labels
 long_data$expenditure_category <- str_wrap(long_data$expenditure_category, width = 20)
 
 # Plot the inflation rates over time with heatmap
 ggplot() +
-  geom_tile(data=long_data, aes(x = date, y = expenditure_category, fill = inflation_rate), color = "white") +
+  # Inflation change heatmap
+  geom_tile(data=long_data, aes(x = date, y = expenditure_category, fill = inflation_rate), color = "grey90") +
   theme_minimal() +
   scale_fill_distiller(palette = "RdYlBu") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  theme(axis.text.x = element_blank())+
+  # Covid cases line graph
   geom_line(data = covid_data, aes(x = month, y = total_cases * 8 + 0.5, group = 1, color = "Number of COVID-19 cases")) +
+  # X-axis labels and scaling representing Time
   scale_x_discrete(breaks = levels(covid_data$month)[seq(1, length(levels(covid_data$month)), by = 3)]) +
+  # Y-axis labels and scaling representing Covid cases
+  
+  
+  
   scale_color_manual(values = c("Number of COVID-19 cases" = "red")) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         axis.text.y = element_text(size = 8),
@@ -133,6 +138,7 @@ ggplot() +
   guides(color = guide_legend(title = "COVID-19 Label", override.aes = list(linetype = c("solid"))))
 
 ```
+
 
 # Further Suggestions for Interactivity
 

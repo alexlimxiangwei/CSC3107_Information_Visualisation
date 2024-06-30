@@ -13,14 +13,16 @@ The code below requires the following packages:
 
 ```{r}
 #| label: library
-#| message: false
+#| include: false
 #| authors: Loh Xian Ming Jeremiah, Wong Zhen Line, Veleon Lim Ming Zhe, Farah Binte Mohamed Tajudeen, Lim Xiang Wei Alex, Javier Ng Wei Cheng
 
 library(tidyverse)
 library(knitr)
 library(readxl)
 library(purrr)
-library(pheatmap)
+library(ggplot2)
+library(scales)
+library(stringr)
 
 ```
 
@@ -84,7 +86,7 @@ inflation_data <- map_dfr(xlsx_files,function(file) {
 keep_categories <- c("All items", "Airline fares", "New and used motor vehicles", "Apparel", "Shelter", "Meats, poultry, fish, and eggs", "Gasoline ")
 filtered_data <- inflation_data %>%
   filter(expenditure_category %in% keep_categories)
-print("filtered data:")
+
 View(filtered_data)
 ```
 
@@ -93,7 +95,7 @@ For the next step, we will merge the data with the data on electricity price, wh
 We chose to use Residential Average Price of Electricity in cents per Kilowatt hour for the U.S as we do not want to focus on commercial or industrial prices.
 
 ```{r}
-#| label: merge-electricity
+#| label: merge-electricity-data
 #| include: false
 #| 
 # Get a list of all the energy XLSX file paths
@@ -113,16 +115,18 @@ energy_data <- map_dfr(xlsx_files,function(file) {
 # drop the current_price and previous_price columns
 energy_data <- energy_data |>
   select(expenditure_category, percent_change, year, month)
-
+View(energy_data)
 # merge the data
 merged_data <- bind_rows(filtered_data, energy_data)
+
+View(merged_data)
 
 ```
 
 Finally, We then pivot the data to a wide format, with each row representing a category of goods and each column representing the year and month of the inflation rate change year on year. We then save the data to a CSV file for visualization and to avoid running the data processing code again as it is time consuming.
 
 ```{r}
-#| label: pivot-data
+#| label: pivot-data-to-wide
 #| echo: false
 
 # Pivot the data to wide format
@@ -132,4 +136,79 @@ wide_data <- merged_data %>%
               values_from = c(percent_change), 
               names_sep = "/")
 write_csv(wide_data, "data/merged/filtered_wide_inflation_data.csv")
+
+# View the wide data
+View(wide_data)
 ```
+
+# TODO: Talk about the Covid data, how it is processed. 
+
+```{r}
+#| label: merge-covid-data
+#| include: false
+
+# Pivot inflation data to long format
+long_data <- wide_data %>%
+  pivot_longer(cols = -expenditure_category, names_to = "date", values_to = "inflation_rate")
+
+View(long_data)
+
+covid_data <- read_csv("data/raw/covid/WHO-COVID-19-global-data.csv")
+
+# Summarize to a monthly level
+covid_data <- covid_data |>
+  filter(Country == "United States of America") |>
+  select(Date_reported, New_cases) |>
+  mutate(Date_reported = as.Date(Date_reported)) |>
+  group_by(month = floor_date(Date_reported, "month")) |>
+  summarise(total_cases = sum(New_cases, na.rm = TRUE)) |>
+  mutate(prev_year_cases = lag(total_cases, n = 12),   # Get the total cases from the previous year  
+         pct_change = (total_cases - prev_year_cases) / prev_year_cases * 100) |> # Calculate the percent change
+  mutate(month = format(month, "%Y/%m")) |> 
+  mutate(month = as.factor(month)) |> # Convert to a factor for proper alignment with non-date format
+  # Normalize the total cases
+  mutate(total_cases = (total_cases - min(total_cases, na.rm = TRUE)) / (max(total_cases, na.rm = TRUE) - min(total_cases, na.rm =TRUE))) 
+
+View(covid_data)
+```
+
+# Improved Plot - to be improved and copied to the poster
+```{r}
+#| label: plot-with-white-lines
+#| fig.width: 11
+#| fig.height: 5
+
+# Wrap long expenditure category labels
+long_data$expenditure_category <- str_wrap(long_data$expenditure_category, width = 20)
+
+# Plot the inflation rates over time with heatmap
+ggplot() +
+  # Inflation change heatmap
+  geom_tile(data=long_data, aes(x = date, y = expenditure_category, fill = inflation_rate), color = "grey90") +
+  theme_minimal() +
+  scale_fill_distiller(palette = "RdYlBu") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  # Covid cases line graph
+  geom_line(data = covid_data, aes(x = month, y = total_cases * 8 + 0.5, group = 1, color = "Number of COVID-19 cases")) +
+  # X-axis labels and scaling representing Time
+  scale_x_discrete(breaks = levels(covid_data$month)[seq(1, length(levels(covid_data$month)), by = 3)]) +
+  # Y-axis labels and scaling representing Covid cases
+  
+  
+  
+  scale_color_manual(values = c("Number of COVID-19 cases" = "red")) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text.y = element_text(size = 8),
+        legend.position = "right",
+        axis.title.x = element_text(vjust = -1, margin = margin(t = 10)),
+        plot.title = element_text(hjust = 0.5),
+        axis.title.y = element_text(vjust = 2)) +
+  labs(title = "Impact of COVID-19 on Inflation Rates for Selected Categories Over Time",
+       x = "Time",
+       y = "Expenditure Category",
+       fill = "Year-over-Year Price Change (%)",
+       color = "Data Type") +
+  guides(color = guide_legend(title = "COVID-19 Label", override.aes = list(linetype = c("solid"))))
+
+```
+

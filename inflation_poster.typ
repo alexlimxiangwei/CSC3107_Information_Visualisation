@@ -482,16 +482,17 @@ We used the Quarto publication framework and the R programming language, along w
 - #emph[tidyverse] for data transformation, including #emph[ggplot2] for visualization based on the grammar of graphics
 - #emph[knitr] for dynamic document generation
 - #emph[purrr] for functional programming tools
-- #emph[pheatmap] for creating heatmaps and having more control over the dimensions and appearance
 - #emph[scales] for additional scaling functions
 - #emph[stringr] for string manipulation
 
 #v(2em)
 = Improved Visualization
 <improved-visualization>
+= Data Plot
+<data-plot>
 #block[
 #block[
-#box(width: 792.0pt, image("inflation_poster_files/figure-typst/plot-with-white-lines-2-1.svg"))
+#box(width: 792.0pt, image("inflation_poster_files/figure-typst/plot-with-white-lines-1.svg"))
 
 ]
 ]
