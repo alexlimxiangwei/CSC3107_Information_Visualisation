@@ -1,0 +1,491 @@
+expenditure_category,inflation_rate,date
+All items,2.5,2020/01
+"Meats, poultry,
+fish, and eggs",1.9,2020/01
+Gasoline,12.8,2020/01
+Apparel,-1.3,2020/01
+Shelter,3.3,2020/01
+Airline fares,2.7,2020/01
+"New and used motor
+vehicles",-1.1,2020/01
+All items,2.3,2020/02
+"Meats, poultry,
+fish, and eggs",1.9,2020/02
+Gasoline,5.6,2020/02
+Apparel,-0.9,2020/02
+Shelter,3.3,2020/02
+Airline fares,2.4,2020/02
+"New and used motor
+vehicles",-0.5,2020/02
+All items,1.5,2020/03
+"Meats, poultry,
+fish, and eggs",2.3,2020/03
+Gasoline,-10.2,2020/03
+Apparel,-1.6,2020/03
+Shelter,3,2020/03
+Airline fares,-10.6,2020/03
+"New and used motor
+vehicles",-0.4,2020/03
+All items,0.3,2020/04
+"Meats, poultry,
+fish, and eggs",6.8,2020/04
+Gasoline,-32,2020/04
+Apparel,-5.7,2020/04
+Shelter,2.6,2020/04
+Airline fares,-24.3,2020/04
+"New and used motor
+vehicles",-1,2020/04
+All items,0.1,2020/05
+"Meats, poultry,
+fish, and eggs",10,2020/05
+Gasoline,-33.8,2020/05
+Apparel,-7.9,2020/05
+Shelter,2.5,2020/05
+Airline fares,-28.8,2020/05
+"New and used motor
+vehicles",-0.7,2020/05
+All items,0.6,2020/06
+"Meats, poultry,
+fish, and eggs",12.8,2020/06
+Gasoline,-23.4,2020/06
+Apparel,-7.3,2020/06
+Shelter,2.4,2020/06
+Airline fares,-27.2,2020/06
+"New and used motor
+vehicles",-1.3,2020/06
+All items,1,2020/07
+"Meats, poultry,
+fish, and eggs",8.4,2020/07
+Gasoline,-20.3,2020/07
+Apparel,-6.5,2020/07
+Shelter,2.3,2020/07
+Airline fares,-23.7,2020/07
+"New and used motor
+vehicles",-0.2,2020/07
+All items,1.3,2020/08
+"Meats, poultry,
+fish, and eggs",7.1,2020/08
+Gasoline,-16.8,2020/08
+Apparel,-5.9,2020/08
+Shelter,2.3,2020/08
+Airline fares,-23.2,2020/08
+"New and used motor
+vehicles",1.7,2020/08
+All items,1.4,2020/09
+"Meats, poultry,
+fish, and eggs",6.3,2020/09
+Gasoline,-15.4,2020/09
+Apparel,-6,2020/09
+Shelter,2,2020/09
+Airline fares,-25,2020/09
+"New and used motor
+vehicles",3.9,2020/09
+All items,1.2,2020/10
+"Meats, poultry,
+fish, and eggs",6.1,2020/10
+Gasoline,-18,2020/10
+Apparel,-5.5,2020/10
+Shelter,2,2020/10
+Airline fares,-20,2020/10
+"New and used motor
+vehicles",4.7,2020/10
+All items,1.2,2020/11
+"Meats, poultry,
+fish, and eggs",5.9,2020/11
+Gasoline,-19.3,2020/11
+Apparel,-5.2,2020/11
+Shelter,1.9,2020/11
+Airline fares,-17,2020/11
+"New and used motor
+vehicles",5.1,2020/11
+All items,1.4,2020/12
+"Meats, poultry,
+fish, and eggs",4.6,2020/12
+Gasoline,-15.2,2020/12
+Apparel,-3.9,2020/12
+Shelter,1.8,2020/12
+Airline fares,-18.4,2020/12
+"New and used motor
+vehicles",4.8,2020/12
+All items,1.4,2021/01
+"Meats, poultry,
+fish, and eggs",5.1,2021/01
+Gasoline,-8.6,2021/01
+Apparel,-2.5,2021/01
+Shelter,1.6,2021/01
+Airline fares,-21.3,2021/01
+"New and used motor
+vehicles",4.1,2021/01
+All items,1.7,2021/02
+"Meats, poultry,
+fish, and eggs",5.2,2021/02
+Gasoline,1.5,2021/02
+Apparel,-3.6,2021/02
+Shelter,1.5,2021/02
+Airline fares,-25.6,2021/02
+"New and used motor
+vehicles",3.7,2021/02
+All items,2.6,2021/03
+"Meats, poultry,
+fish, and eggs",5.4,2021/03
+Gasoline,22.5,2021/03
+Apparel,-2.5,2021/03
+Shelter,1.7,2021/03
+Airline fares,-15.1,2021/03
+"New and used motor
+vehicles",4.4,2021/03
+All items,4.2,2021/04
+"Meats, poultry,
+fish, and eggs",2,2021/04
+Gasoline,49.6,2021/04
+Apparel,1.9,2021/04
+Shelter,2.1,2021/04
+Airline fares,9.6,2021/04
+"New and used motor
+vehicles",9.6,2021/04
+All items,5,2021/05
+"Meats, poultry,
+fish, and eggs",0.1,2021/05
+Gasoline,56.2,2021/05
+Apparel,5.6,2021/05
+Shelter,2.2,2021/05
+Airline fares,24.1,2021/05
+"New and used motor
+vehicles",13.9,2021/05
+All items,5.4,2021/06
+"Meats, poultry,
+fish, and eggs",0.7,2021/06
+Gasoline,45.1,2021/06
+Apparel,4.9,2021/06
+Shelter,2.6,2021/06
+Airline fares,24.6,2021/06
+"New and used motor
+vehicles",20.7,2021/06
+All items,5.4,2021/07
+"Meats, poultry,
+fish, and eggs",5.9,2021/07
+Gasoline,41.8,2021/07
+Apparel,4.2,2021/07
+Shelter,2.8,2021/07
+Airline fares,19,2021/07
+"New and used motor
+vehicles",19.9,2021/07
+All items,5.3,2021/08
+"Meats, poultry,
+fish, and eggs",8,2021/08
+Gasoline,42.7,2021/08
+Apparel,4.2,2021/08
+Shelter,2.8,2021/08
+Airline fares,6.7,2021/08
+"New and used motor
+vehicles",17.1,2021/08
+All items,5.4,2021/09
+"Meats, poultry,
+fish, and eggs",10.5,2021/09
+Gasoline,42.1,2021/09
+Apparel,3.4,2021/09
+Shelter,3.2,2021/09
+Airline fares,0.8,2021/09
+"New and used motor
+vehicles",15,2021/09
+All items,6.2,2021/10
+"Meats, poultry,
+fish, and eggs",11.9,2021/10
+Gasoline,49.6,2021/10
+Apparel,4.3,2021/10
+Shelter,3.5,2021/10
+Airline fares,-4.6,2021/10
+"New and used motor
+vehicles",16.3,2021/10
+All items,6.8,2021/11
+"Meats, poultry,
+fish, and eggs",12.8,2021/11
+Gasoline,58.1,2021/11
+Apparel,5,2021/11
+Shelter,3.8,2021/11
+Airline fares,-3.7,2021/11
+"New and used motor
+vehicles",18.4,2021/11
+All items,7,2021/12
+"Meats, poultry,
+fish, and eggs",12.5,2021/12
+Gasoline,49.6,2021/12
+Apparel,5.8,2021/12
+Shelter,4.1,2021/12
+Airline fares,1.4,2021/12
+"New and used motor
+vehicles",20.9,2021/12
+All items,7.5,2022/01
+"Meats, poultry,
+fish, and eggs",12.2,2022/01
+Gasoline,40,2022/01
+Apparel,5.3,2022/01
+Shelter,4.4,2022/01
+Airline fares,4.9,2022/01
+"New and used motor
+vehicles",23.1,2022/01
+All items,7.9,2022/02
+"Meats, poultry,
+fish, and eggs",13,2022/02
+Gasoline,38,2022/02
+Apparel,6.6,2022/02
+Shelter,4.7,2022/02
+Airline fares,12.7,2022/02
+"New and used motor
+vehicles",23.5,2022/02
+All items,8.5,2022/03
+"Meats, poultry,
+fish, and eggs",13.7,2022/03
+Gasoline,48,2022/03
+Apparel,6.8,2022/03
+Shelter,5,2022/03
+Airline fares,23.6,2022/03
+"New and used motor
+vehicles",21.7,2022/03
+All items,8.3,2022/04
+"Meats, poultry,
+fish, and eggs",14.3,2022/04
+Gasoline,43.6,2022/04
+Apparel,5.4,2022/04
+Shelter,5.1,2022/04
+Airline fares,33.3,2022/04
+"New and used motor
+vehicles",17.4,2022/04
+All items,8.6,2022/05
+"Meats, poultry,
+fish, and eggs",14.2,2022/05
+Gasoline,48.7,2022/05
+Apparel,5,2022/05
+Shelter,5.5,2022/05
+Airline fares,37.8,2022/05
+"New and used motor
+vehicles",13.7,2022/05
+All items,9.1,2022/06
+"Meats, poultry,
+fish, and eggs",11.7,2022/06
+Gasoline,59.9,2022/06
+Apparel,5.2,2022/06
+Shelter,5.6,2022/06
+Airline fares,34.1,2022/06
+"New and used motor
+vehicles",9.7,2022/06
+All items,8.5,2022/07
+"Meats, poultry,
+fish, and eggs",10.9,2022/07
+Gasoline,44,2022/07
+Apparel,5.1,2022/07
+Shelter,5.7,2022/07
+Airline fares,27.7,2022/07
+"New and used motor
+vehicles",9.2,2022/07
+All items,8.3,2022/08
+"Meats, poultry,
+fish, and eggs",10.6,2022/08
+Gasoline,25.6,2022/08
+Apparel,5.1,2022/08
+Shelter,6.2,2022/08
+Airline fares,33.4,2022/08
+"New and used motor
+vehicles",9.8,2022/08
+All items,8.2,2022/09
+"Meats, poultry,
+fish, and eggs",9,2022/09
+Gasoline,18.2,2022/09
+Apparel,5.5,2022/09
+Shelter,6.6,2022/09
+Airline fares,42.9,2022/09
+"New and used motor
+vehicles",9.9,2022/09
+All items,7.7,2022/10
+"Meats, poultry,
+fish, and eggs",8,2022/10
+Gasoline,17.5,2022/10
+Apparel,4.1,2022/10
+Shelter,6.9,2022/10
+Airline fares,42.9,2022/10
+"New and used motor
+vehicles",6.9,2022/10
+All items,7.1,2022/11
+"Meats, poultry,
+fish, and eggs",6.8,2022/11
+Gasoline,10.1,2022/11
+Apparel,3.6,2022/11
+Shelter,7.1,2022/11
+Airline fares,36,2022/11
+"New and used motor
+vehicles",3.6,2022/11
+All items,6.5,2022/12
+"Meats, poultry,
+fish, and eggs",7.7,2022/12
+Gasoline,-1.5,2022/12
+Apparel,2.9,2022/12
+Shelter,7.5,2022/12
+Airline fares,28.5,2022/12
+"New and used motor
+vehicles",0.7,2022/12
+All items,6.4,2023/01
+"Meats, poultry,
+fish, and eggs",8.1,2023/01
+Gasoline,1.5,2023/01
+Apparel,3.1,2023/01
+Shelter,7.9,2023/01
+Airline fares,25.6,2023/01
+"New and used motor
+vehicles",-0.7,2023/01
+All items,6,2023/02
+"Meats, poultry,
+fish, and eggs",6.8,2023/02
+Gasoline,-2,2023/02
+Apparel,3.3,2023/02
+Shelter,8.1,2023/02
+Airline fares,26.5,2023/02
+"New and used motor
+vehicles",-1.3,2023/02
+All items,5,2023/03
+"Meats, poultry,
+fish, and eggs",4.3,2023/03
+Gasoline,-17.4,2023/03
+Apparel,3.3,2023/03
+Shelter,8.2,2023/03
+Airline fares,17.7,2023/03
+"New and used motor
+vehicles",-0.1,2023/03
+All items,4.9,2023/04
+"Meats, poultry,
+fish, and eggs",2.8,2023/04
+Gasoline,-12.2,2023/04
+Apparel,3.6,2023/04
+Shelter,8.1,2023/04
+Airline fares,-0.9,2023/04
+"New and used motor
+vehicles",0.8,2023/04
+All items,4,2023/05
+"Meats, poultry,
+fish, and eggs",0.3,2023/05
+Gasoline,-19.7,2023/05
+Apparel,3.5,2023/05
+Shelter,8,2023/05
+Airline fares,-13.4,2023/05
+"New and used motor
+vehicles",1.4,2023/05
+All items,3,2023/06
+"Meats, poultry,
+fish, and eggs",-0.2,2023/06
+Gasoline,-26.5,2023/06
+Apparel,3.1,2023/06
+Shelter,7.8,2023/06
+Airline fares,-18.9,2023/06
+"New and used motor
+vehicles",0,2023/06
+All items,3.2,2023/07
+"Meats, poultry,
+fish, and eggs",-0.2,2023/07
+Gasoline,-19.9,2023/07
+Apparel,3.2,2023/07
+Shelter,7.7,2023/07
+Airline fares,-18.6,2023/07
+"New and used motor
+vehicles",-0.5,2023/07
+All items,3.7,2023/08
+"Meats, poultry,
+fish, and eggs",0,2023/08
+Gasoline,-3.3,2023/08
+Apparel,3.1,2023/08
+Shelter,7.3,2023/08
+Airline fares,-13.3,2023/08
+"New and used motor
+vehicles",-1,2023/08
+All items,3.7,2023/09
+"Meats, poultry,
+fish, and eggs",0.2,2023/09
+Gasoline,3,2023/09
+Apparel,2.3,2023/09
+Shelter,7.2,2023/09
+Airline fares,-13.4,2023/09
+"New and used motor
+vehicles",-1.8,2023/09
+All items,3.2,2023/10
+"Meats, poultry,
+fish, and eggs",0.4,2023/10
+Gasoline,-5.3,2023/10
+Apparel,2.6,2023/10
+Shelter,6.7,2023/10
+Airline fares,-13.2,2023/10
+"New and used motor
+vehicles",-1.7,2023/10
+All items,3.1,2023/11
+"Meats, poultry,
+fish, and eggs",0.1,2023/11
+Gasoline,-8.9,2023/11
+Apparel,1.1,2023/11
+Shelter,6.5,2023/11
+Airline fares,-12.1,2023/11
+"New and used motor
+vehicles",0.1,2023/11
+All items,3.4,2023/12
+"Meats, poultry,
+fish, and eggs",-0.1,2023/12
+Gasoline,-1.9,2023/12
+Apparel,1,2023/12
+Shelter,6.2,2023/12
+Airline fares,-9.4,2023/12
+"New and used motor
+vehicles",0.2,2023/12
+All items,3.1,2024/01
+"Meats, poultry,
+fish, and eggs",-0.9,2024/01
+Gasoline,-6.4,2024/01
+Apparel,0.1,2024/01
+Shelter,6,2024/01
+Airline fares,-6.4,2024/01
+"New and used motor
+vehicles",-1.1,2024/01
+Energy,2.5,2020/01
+Energy,0.9,2020/02
+Energy,1.7,2020/03
+Energy,-1.5,2020/04
+Energy,-0.1,2020/05
+Energy,-0.6,2020/06
+Energy,-0.2,2020/07
+Energy,0.1,2020/08
+Energy,3,2020/09
+Energy,6.2,2020/10
+Energy,2.5,2020/11
+Energy,0.9,2020/12
+Energy,-0.8,2021/01
+Energy,3.8,2021/02
+Energy,1.6,2021/03
+Energy,3.6,2021/04
+Energy,4.3,2021/05
+Energy,4.4,2021/06
+Energy,4.9,2021/07
+Energy,5.1,2021/08
+Energy,5.2,2021/09
+Energy,3.3,2021/10
+Energy,6.1,2021/11
+Energy,7.6,2021/12
+Energy,8.1,2022/01
+Energy,3.6,2022/02
+Energy,8.8,2022/03
+Energy,7.3,2022/04
+Energy,7.4,2022/05
+Energy,11.3,2022/06
+Energy,11.5,2022/07
+Energy,14.3,2022/08
+Energy,15.4,2022/09
+Energy,14.4,2022/10
+Energy,11.2,2022/11
+Energy,9,2022/12
+Energy,12.8,2023/01
+Energy,15.4,2023/02
+Energy,9.5,2023/03
+Energy,9.5,2023/04
+Energy,7.8,2023/05
+Energy,4.6,2023/06
+Energy,3.2,2023/07
+Energy,0.7,2023/08
+Energy,0.6,2023/09
+Energy,1.4,2023/10
+Energy,4.1,2023/11
+Energy,5.3,2023/12
+Energy,-0.1,2024/01
