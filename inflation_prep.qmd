@@ -133,7 +133,7 @@ Finally, we save the csv so we no longer need to run the time-consuming data cle
 #| label: finalise-long-data
 #| echo: false
 
-# 
+# merge year and month into date, rename percent_change to inflation_rate
 long_data <- merged_data %>%
   unite(date, year, month, sep = "/") %>%
   rename(inflation_rate = percent_change)
