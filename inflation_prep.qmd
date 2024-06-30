@@ -24,6 +24,7 @@ library(ggplot2)
 library(scales)
 library(stringr)
 library(grid)
+library(dplyr)
 
 ```
 
@@ -144,6 +145,10 @@ View(wide_data)
 
 # TODO: Talk about the Covid data, how it is processed.
 
+We suspected the COVID-19 pandemic might have affected the inflation rates for the selected categories. Hence, we obtained another set of data from daily reported COVID-19 cases from [World Health Organization](https://data.who.int/dashboards/covid19/data/), which contains the total number of COVID-19 cases reported daily, from Jan 2020 to June 2024. 
+
+We filtered the data to only include the United States of America and calculated the total number of COVID-19 cases reported each month. We then normalized the total cases to fit the 0.00 to 1.00 range for visualization purposes. To align the COVID-19 data with the inflation data, we removed the last 5 months of data to only include up to Jan 2024.
+
 ```{r}
 #| label: merge-covid-data
 #| include: false
@@ -156,19 +161,19 @@ View(long_data)
 
 covid_data <- read_csv("data/raw/covid/WHO-COVID-19-global-data.csv")
 
-# Summarize to a monthly level
+# Prepare the COVID-19 data
 covid_data <- covid_data |>
-  filter(Country == "United States of America") |>
+  filter(Country == "United States of America") |> # Filter data for the United States of America
   select(Date_reported, New_cases) |>
-  mutate(Date_reported = as.Date(Date_reported)) |>
-  group_by(month = floor_date(Date_reported, "month")) |>
-  summarise(total_cases = sum(New_cases, na.rm = TRUE)) |>
-  mutate(prev_year_cases = lag(total_cases, n = 12),   # Get the total cases from the previous year  
-         pct_change = (total_cases - prev_year_cases) / prev_year_cases * 100) |> # Calculate the percent change
-  mutate(month = format(month, "%Y/%m")) |> 
+  mutate(Date_reported = as.Date(Date_reported)) |> # Convert to Date format
+  group_by(month = floor_date(Date_reported, "month")) |> # Group by month
+  summarise(total_cases = sum(New_cases, na.rm = TRUE)) |> # Calculate the total cases for each month
+  
+  mutate(month = format(month, "%Y/%m")) |> # Format the month to match the inflation data
   mutate(month = as.factor(month)) |> # Convert to a factor for proper alignment with non-date format
   # Normalize the total cases
-  mutate(total_cases = (total_cases - min(total_cases, na.rm = TRUE)) / (max(total_cases, na.rm = TRUE) - min(total_cases, na.rm =TRUE))) 
+  mutate(total_cases = (total_cases - min(total_cases, na.rm = TRUE)) / (max(total_cases, na.rm = TRUE) - min(total_cases, na.rm =TRUE))) |>
+  slice(1:(n() - 5)) # Remove the 5 months data to only include up to Jan 2024
 
 View(covid_data)
 ```
@@ -176,55 +181,12 @@ View(covid_data)
 # Improved Plot - to be improved and copied to the poster
 
 ```{r}
-#| label: plot-with-white-lines
-#| fig.width: 11
-#| fig.height: 5
-
-# Wrap long expenditure category labels
-long_data$expenditure_category <- str_wrap(long_data$expenditure_category, width = 20)
-
-# Plot the inflation rates over time with heatmap
-ggplot() +
-  # Inflation change heatmap
-  geom_tile(data=long_data, aes(x = date, y = expenditure_category, fill = inflation_rate), color = "grey90") +
-  theme_minimal() +
-  scale_fill_distiller(palette = "RdYlBu") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  # Covid cases line graph
-  geom_line(data = covid_data, aes(x = month, y = total_cases * 8 + 0.5, group = 1, color = "Number of COVID-19 cases")) +
-  # X-axis labels and scaling representing Time
-  scale_x_discrete(breaks = levels(covid_data$month)[seq(1, length(levels(covid_data$month)), by = 3)]) +
-  # Y-axis labels and scaling representing Covid cases
-  
-  
-  
-  scale_color_manual(values = c("Number of COVID-19 cases" = "red")) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        axis.text.y = element_text(size = 8),
-        legend.position = "right",
-        axis.title.x = element_text(vjust = -1, margin = margin(t = 10)),
-        plot.title = element_text(hjust = 0.5),
-        axis.title.y = element_text(vjust = 2)) +
-  labs(title = "Impact of COVID-19 on Inflation Rates for Selected Categories Over Time",
-       x = "Time",
-       y = "Expenditure Category",
-       fill = "Year-over-Year Price Change (%)",
-       color = "Data Type") +
-  guides(color = guide_legend(title = "COVID-19 Label", override.aes = list(linetype = c("solid"))))
-
-
-
-```
-
-# **Pending**
-
-```{r}
-#| label: plot-with-white-lines
+#| label: improved-visualisation
 #| fig.width: 11
 #| fig.height: 5
 
 # Reshape the data from wide to long format
-long_data <- pivot_longer(filtered_wide_inflation_data, cols = -expenditure_category, names_to = "date", values_to = "inflation_rate")
+long_data <- pivot_longer(wide_data, cols = -expenditure_category, names_to = "date", values_to = "inflation_rate")
 
 # Wrap long expenditure category labels
 long_data$expenditure_category <- str_wrap(long_data$expenditure_category, width = 20)
@@ -246,7 +208,8 @@ scale_factor <- max(covid_data$total_cases) / num_categories
 # Plot the inflation rates over time with heatmap
 ggplot() +
   # Inflation change heatmap
-  geom_tile(data = long_data, aes(x = date, y = y_value, fill = inflation_rate), color = "grey90") +
+  geom_tile(data = long_data, aes(x = date, y = y_value, fill = inflation_rate), color = "grey85") +
+  coord_fixed(ratio = 2.5) +
   theme_minimal() +
   scale_fill_distiller(palette = "RdYlBu") +
   scale_y_continuous(breaks = category_mapping$y_value, labels = category_mapping$expenditure_category, 
