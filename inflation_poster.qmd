@@ -26,8 +26,6 @@ knitr:
 library(knitr)
 purl("inflation_prep.qmd")
 source("inflation_prep.R")
-purl("inflation_vis.qmd")
-source("inflation_vis.R")
 ```
 
 # Introduction
@@ -43,7 +41,7 @@ Inflation, the rate at which the general level of prices for goods and services 
 ```{r}
 #| label: fig-nbc-on-poster
 #| fig-cap: "Yearly Perntage Change in Consumer Prices for major catergories of goods in the USA, published by NBC News."
-#| out-width: "100%"
+#| out-width: "80%"
 include_graphics("images/inflation-original-big.png")
 ```
 
@@ -51,12 +49,11 @@ include_graphics("images/inflation-original-big.png")
 
 -   The plot title and subtitle is clear and informative, immediately providing context and helping readers to understand the focus of the visualization.
 -   The heatmap design effectively conveys a high information content without cluttering the plot. This allows for quick and intuitive understanding of the data trends.
--   Pointing with the mouse at a tile opens an infotip, enabling readers to retrieve specific incidence data for a given state and year (@fig-infotip_color_change). The infotip only occludes a small portion of the plot, and the partial transparency of the infotip ensures visibility of the tiles underneath.
+-   Pointing with the mouse at a tile opens an infotip, enabling readers to retrieve overall yearly percentage changes for each category.
 -   The colors chosen (red and blue) are color-blind friendly, ensuring that the visualization is accessible to a wider audience.
 -   The inclusion of detailed source information at the bottom of the chart adds credibility and transparency to the data presented.
 -   The overall design is user-friendly, with a clean layout, intuitive color coding, and easy-to-read labels, making the visualization accessible to a broad audience.
 -   The color legend is clear and informative which helps readers to quickly understand the meaning of the the colors (red-increasing inflation, blue-decreasing inflation) and the range of percentage changes displayed.
-
 
 # Suggested Improvements
 
@@ -94,6 +91,8 @@ We used the Quarto publication framework and the R programming language, along w
 -   *purrr* for functional programming tools
 -   *scales* for additional scaling functions
 -   *stringr* for string manipulation
+-   *dplyr* for data manipulation
+-   *grid* for graphical layout management
 
 ```{=typst}
 #v(2em)
@@ -139,10 +138,9 @@ ggplot() +
 
 ```
 
-
 # Further Suggestions for Interactivity
 
-Because our visualization was intended for a poster, we did not implement any interactive features, including the infotip. However, if the data are visualized in an HTML document, interactive features can be achieved using the R packages such as *plotly*. In that case, we recommend that the tile does not change its fill color. In contrast, the original visualization changes the fill color of the activated tile to light blue (see @fig-infotip_color_change), which can be misinterpreted as a change in incidence. Instead, we suggest highlighting the activated tile by thickening its border.
+The visualization was designed for a poster so no interactive features were put in place including infotip. However when data is visualized into an HTML document, one can make it interactive by using R packages like *plotly*. 
 
 # Conclusion
 

@@ -49,7 +49,7 @@ Relevant columns for data processing include: - `Expenditure category`: Category
 
 For our data processing purposes, we will only retain rows where `Expenditure category` is one of the following:
 
--    `All items`: Overall inflation
+-   `All items`: Overall inflation
 
 -   `Airline fares`: Airfare
 
@@ -141,7 +141,7 @@ long_data$expenditure_category <- str_wrap(long_data$expenditure_category, width
 view(long_data)
 ```
 
-#  COVID-19 data for contextualization
+# COVID-19 data for contextualization
 
 To enhance our understanding of inflation trends, we are incorporating COVID-19 data as a contextual variable. This additional dataset, sourced from the [World Health Organization](https://data.who.int/dashboards/covid19/data/), comprises daily reported COVID-19 cases from January 2020 to January 2024. By integrating this information, we aim to provide a more comprehensive perspective on the factors potentially influencing inflation patterns during this period. This data enrichment allows us to explore possible correlations between the pandemic's progression and observed economic fluctuations, thereby offering a more nuanced analysis of inflationary trends.
 

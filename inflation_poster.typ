@@ -423,7 +423,7 @@ Inflation, the rate at which the general level of prices for goods and services 
 #block[
 #block[
 #figure([
-#box(width: 100%,image("images/inflation-original-big.png"))
+#box(width: 80%,image("images/inflation-original-big.png"))
 ], caption: figure.caption(
 position: bottom, 
 [
@@ -442,7 +442,7 @@ numbering: "1",
 <strengths>
 - The plot title and subtitle is clear and informative, immediately providing context and helping readers to understand the focus of the visualization.
 - The heatmap design effectively conveys a high information content without cluttering the plot. This allows for quick and intuitive understanding of the data trends.
-- Pointing with the mouse at a tile opens an infotip, enabling readers to retrieve specific incidence data for a given state and year \(#strong[?\@fig-infotip\_color\_change];). The infotip only occludes a small portion of the plot, and the partial transparency of the infotip ensures visibility of the tiles underneath.
+- Pointing with the mouse at a tile opens an infotip, enabling readers to retrieve overall yearly percentage changes for each category.
 - The colors chosen \(red and blue) are color-blind friendly, ensuring that the visualization is accessible to a wider audience.
 - The inclusion of detailed source information at the bottom of the chart adds credibility and transparency to the data presented.
 - The overall design is user-friendly, with a clean layout, intuitive color coding, and easy-to-read labels, making the visualization accessible to a broad audience.
@@ -484,12 +484,12 @@ We used the Quarto publication framework and the R programming language, along w
 - #emph[purrr] for functional programming tools
 - #emph[scales] for additional scaling functions
 - #emph[stringr] for string manipulation
+- #emph[dplyr] for data manipulation
+- #emph[grid] for graphical layout management
 
 #v(2em)
 = Improved Visualization
 <improved-visualization>
-= Data Plot
-<data-plot>
 #block[
 #block[
 #box(width: 792.0pt, image("inflation_poster_files/figure-typst/plot-with-white-lines-1.svg"))
@@ -498,8 +498,24 @@ We used the Quarto publication framework and the R programming language, along w
 ]
 = Further Suggestions for Interactivity
 <further-suggestions-for-interactivity>
-Because our visualization was intended for a poster, we did not implement any interactive features, including the infotip. However, if the data are visualized in an HTML document, interactive features can be achieved using the R packages such as #emph[plotly];. In that case, we recommend that the tile does not change its fill color. In contrast, the original visualization changes the fill color of the activated tile to light blue \(see #strong[?\@fig-infotip\_color\_change];), which can be misinterpreted as a change in incidence. Instead, we suggest highlighting the activated tile by thickening its border.
+The visualization was designed for a poster so no interactive features were put in place including infotip. However when data is visualized into an HTML document, one can make it interactive by using R packages like #emph[plotly];.
 
 = Conclusion
 <conclusion>
-We successfully implemented the suggested improvements for the non-interactive visualization, including adding layers of information about major events like COVID-19 and its impact on inflation rates across various categories, providing a richer contextual understanding of the data. Our continuous timeline and intuitive heat map color gradient from blue to red effectively illustrate trends and changes over time. Furthermore, The inclusion of COVID-19 case data adds depth, highlighting correlations between the pandemic and inflation fluctuations. These enhancements make the improved visualization more comprehensive and insightful, effectively illustrating trends and correlations over time.
+== Key Findings and Insights
+<key-findings-and-insights>
+The analysis of the correlation between US inflation rates for various expenditure categories and the number of COVID-19 cases reveals significant insights into the pandemic’s impact on the economy. The visualization effectively highlights how the peak in COVID-19 cases around late 2020 and early 2021 coincides with noticeable changes in inflation rates across several categories.
+
+Gasoline prices experienced substantial fluctuations, with a significant increase during the peak of COVID-19 cases, followed by a decrease. This pattern indicates a strong correlation between the pandemic and fuel prices. Similarly, airline fares dropped sharply during the early phase of the pandemic due to travel restrictions and decreased demand but began to recover as case numbers rose, though they continued to fluctuate significantly.
+
+Other expenditure categories, such as apparel and energy, also displayed changes in inflation rates. Energy prices initially increased, while apparel showed mild fluctuations. The category of meats, poultry, fish, and eggs experienced a steady rise in inflation rates, likely driven by supply chain disruptions and increased demand.
+
+The overall inflation rate, represented by the "All items" category, trended upward during the peaks in COVID-19 cases, suggesting a broad impact of the pandemic on inflation. After the peak, inflation rates in many categories began to normalize, although some continued to exhibit volatility.
+
+The observed correlation between COVID-19 cases and inflation rates can be attributed to factors such as supply chain disruptions, shifts in consumer behavior, and government policies. Higher case numbers often resulted in lockdowns, reduced production capacities, and altered consumer demand, all contributing to price volatility.
+
+In summary, the visualization effectively demonstrates that the number of COVID-19 cases significantly influenced inflation rates across various expenditure categories in the US. Categories such as gasoline, airline fares, and overall inflation show a clear correlation, highlighting the pandemic’s impact on supply and demand dynamics, leading to notable price fluctuations.
+
+== Visualization Improvements
+<visualization-improvements>
+The enhancements to the visualization, including the integration of major events like COVID-19 and their impact on inflation, provide a richer contextual understanding of the data. The use of a continuous timeline and a heat map color gradient from blue to red effectively illustrates trends and changes over time. Additionally, incorporating COVID-19 case data adds depth, emphasizing the correlation between the pandemic and inflation fluctuations. Adjusting the x-axis ratio allows for better analysis, highlighting the significance of dates in relation to COVID-19 cases and inflation rates. These improvements make the visualization more comprehensive and insightful, effectively illustrating trends and correlations over time.
