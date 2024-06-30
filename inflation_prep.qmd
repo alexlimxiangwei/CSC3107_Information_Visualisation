@@ -123,9 +123,11 @@ merged_data <- bind_rows(filtered_data, energy_data)
 
 ```
 
-Finally, We then unite the year and month columns into one date column for ease of visualization and rename percent_change into inflation_rate.
+We then unite the year and month columns into one date column for ease of visualization and rename percent_change into inflation_rate.
 
 We also wrap long category labels to prevent long category names from overlapping or extending beyond the plotting area.
+
+Finally, we save the csv so we no longer need to run the time-consuming data cleaning code.
 
 ```{r}
 #| label: finalise-long-data
@@ -139,6 +141,10 @@ long_data <- merged_data %>%
 # Wrap long expenditure category labels
 long_data$expenditure_category <- str_wrap(long_data$expenditure_category, width = 20)
 view(long_data)
+
+#Save the csv
+write_csv(long_data, "data/merged/inflation_data.csv")
+
 ```
 
 # COVID-19 data for contextualization
