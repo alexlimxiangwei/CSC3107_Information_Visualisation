@@ -101,19 +101,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>Introduction</h1>
 <p>This document contains the data engineering required to reconstruct and improve the plot by <span class="citation" data-cites="Joella_Carman">@Joella_Carman</span> and <span class="citation" data-cites="Nigel_Chiwaya">@Nigel_Chiwaya</span>, shown in <span class="citation" data-cites="NBC_News">@NBC_News</span>, depicting inflation year over year for major categories of goods (May 2023 to Apr 2024).</p>
 <p>The code below requires the following packages:</p>
-<div class="cell" data-authors="Loh Xian Ming Jeremiah, Wong Zhen Line, Veleon Lim Ming Zhe, Farah Binte Mohamed Tajudeen, Lim Xiang Wei Alex, Javier Ng Wei Cheng">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pheatmap)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-inflation" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-inflation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="images/inflation-original-big.png" class="img-fluid figure-img">
+<img src="images/inflation-original-big.png" class="img-fluid figure-img" width="468">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inflation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;1: Visualising inflation in the USA from May 2023 to Apr 2024 by <span class="citation" data-cites="Joella_Carman">@Joella_Carman</span> and <span class="citation" data-cites="Nigel_Chiwaya">@Nigel_Chiwaya</span>.
@@ -126,24 +119,96 @@ Figure&nbsp;1: Visualising inflation in the USA from May 2023 to Apr 2024 by <sp
 <section id="data-cleaning" class="level1">
 <h1>Data Cleaning</h1>
 <p><span class="citation" data-cites="Joella_Carman">@Joella_Carman</span> and <span class="citation" data-cites="Nigel_Chiwaya">@Nigel_Chiwaya</span> based their visualization data on <a href="https://www.bls.gov/cpi/tables/supplemental-files/">Bureau of Labor Statistics</a> and <a href="https://www.eia.gov/electricity/monthly/">Energy Information Administration</a> data, available in XLXS format with each row representing a major category of goods.</p>
-<p>Instead of only May 2023 to Apr 2024, we will instead use data from Jan 2019 to Mar 2024.(No data for April 2024 for electricity yet) Having 5 years of data will give us a clearer picture of the inflation rates for the major categories of goods.</p>
+<p>Instead of only May 2023 to Apr 2024, we will instead use data from Jan 2019 to Jan 2024. Having 5 years of data will give us a clearer picture of the inflation rates for the major categories of goods.</p>
 <p>The data is separated into various XLXS files, one for each month. We will combine these files into a single data set, while also dropping columns that are not relevant for our analysis.</p>
 <p>Relevant columns for data processing include: - <code>Expenditure category</code>: Category of goods - <code>Unadjusted percent change</code>: Inflation rate change year on year for the category</p>
-<p>For our data processing purposes, we will only retain rows where <code>Expenditure category</code> is one of the following: - <code>All items</code>: Overall inflation - <code>Airline fares</code>: Airfare - <code>New and used motor vehicles</code>: Cars - <code>Apparel</code>: Clothing - <code>Shelter</code>: Housing costs - <code>Meats, poultry, fish, and eggs</code>: Meat and eggs - <code>Gasoline</code>: Gas</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep only the categories we are interested in</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>keep_categories <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"All items"</span>, <span class="st">"Airline fares"</span>, <span class="st">"New and used motor vehicles"</span>, <span class="st">"Apparel"</span>, <span class="st">"Shelter"</span>, <span class="st">"Meats, poultry, fish, and eggs"</span>, <span class="st">"Gasoline "</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>filtered_data <span class="ot">&lt;-</span> inflation_data <span class="sc">%&gt;%</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(expenditure_category <span class="sc">%in%</span> keep_categories)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"filtered data:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "filtered data:"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">View</span>(filtered_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>For the next step, we will merge the data with the data on electricity price, which is not included in the original data set.</p>
+<p>For our data processing purposes, we will only retain rows where <code>Expenditure category</code> is one of the following:</p>
+<ul>
+<li><p><code>All items</code>: Overall inflation</p></li>
+<li><p><code>Airline fares</code>: Airfare</p></li>
+<li><p><code>New and used motor vehicles</code>: Cars</p></li>
+<li><p><code>Apparel</code>: Clothing</p></li>
+<li><p><code>Shelter</code>: Housing costs</p></li>
+<li><p><code>Meats, poultry, fish, and eggs</code>: Meat and eggs</p></li>
+<li><p><code>Gasoline</code>: Gas</p></li>
+</ul>
+<p>These categories are in line with those in the original plot shown in <span class="citation" data-cites="NBC_News">@NBC_News</span>.</p>
+<p>For the next step, we will merge the data with the data on <a href="https://www.eia.gov/electricity/monthly/">electricity price</a>, which is not included in the original data set.</p>
 <p>We chose to use Residential Average Price of Electricity in cents per Kilowatt hour for the U.S as we do not want to focus on commercial or industrial prices.</p>
-<p>Finally, We then pivot the data to a wide format, with each row representing a category of goods and each column representing the year and month of the inflation rate change year on year. We then save the data to a CSV file for visualization and to avoid running the data processing code again as it is time consuming.</p>
+<p>We then unite the year and month columns into one date column for ease of visualization and rename percent_change into inflation_rate.</p>
+<p>We also wrap long category labels to prevent long category names from overlapping or extending beyond the plotting area.</p>
+<p>Finally, we save the csv so we no longer need to run the time-consuming data cleaning code.</p>
+</section>
+<section id="covid-19-data-for-contextualization" class="level1">
+<h1>COVID-19 data for contextualization</h1>
+<p>To enhance our understanding of inflation trends, we are incorporating COVID-19 data as a contextual variable. This additional dataset, sourced from the <a href="https://data.who.int/dashboards/covid19/data/">World Health Organization</a>, comprises daily reported COVID-19 cases from January 2020 to January 2024. By integrating this information, we aim to provide a more comprehensive perspective on the factors potentially influencing inflation patterns during this period. This data enrichment allows us to explore possible correlations between the pandemic’s progression and observed economic fluctuations, thereby offering a more nuanced analysis of inflationary trends.</p>
+<p>We filtered the data to only include the United States of America and calculated the total number of COVID-19 cases reported each month. We then normalized the total cases to fit the 0.00 to 1.00 range for visualization purposes. To align the COVID-19 data with the inflation data, we removed the last 5 months of data to only include up to Jan 2024. We save the csv for future use at the end.</p>
+</section>
+<section id="improved-plot---to-be-improved-and-copied-to-the-poster" class="level1">
+<h1>Improved Plot - to be improved and copied to the poster</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if y_value already exists in long_data</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="st">"y_value"</span> <span class="sc">%in%</span> <span class="fu">colnames</span>(long_data)) {</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create a mapping for expenditure categories to continuous y-values if it doesn't exist</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  unique_categories <span class="ot">&lt;-</span> <span class="fu">unique</span>(long_data<span class="sc">$</span>expenditure_category)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  num_categories <span class="ot">&lt;-</span> <span class="fu">length</span>(unique_categories)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  category_mapping <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">expenditure_category =</span> unique_categories,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">y_value =</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">8</span>, <span class="at">length.out =</span> num_categories)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Merge the mapping with the long_data</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  long_data <span class="ot">&lt;-</span> <span class="fu">merge</span>(long_data, category_mapping, <span class="at">by =</span> <span class="st">"expenditure_category"</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the scale factor for the COVID-19 cases to fit the 0.00 to 1.00 range</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>scale_factor <span class="ot">&lt;-</span> <span class="fu">max</span>(covid_data<span class="sc">$</span>total_cases) <span class="sc">/</span> num_categories</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the inflation rates over time with heatmap</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Inflation change heatmap</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="at">data =</span> long_data, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> y_value, <span class="at">fill =</span> inflation_rate), <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">width =</span> <span class="fl">0.9</span>) <span class="sc">+</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>(<span class="at">ratio =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_distiller</span>(<span class="at">palette =</span> <span class="st">"RdBu"</span>) <span class="sc">+</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> category_mapping<span class="sc">$</span>y_value, <span class="at">labels =</span> category_mapping<span class="sc">$</span>expenditure_category, </span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>                     <span class="at">sec.axis =</span> <span class="fu">sec_axis</span>(<span class="sc">~</span>.<span class="sc">*</span><span class="fu">max</span>(covid_data<span class="sc">$</span>total_cases), <span class="at">name =</span> <span class="st">"Total Covid Cases (10M)"</span>)) <span class="sc">+</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Covid cases line graph</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> covid_data, <span class="fu">aes</span>(<span class="at">x =</span> month, <span class="at">y =</span> total_cases <span class="sc">*</span> <span class="dv">8</span> <span class="sc">+</span> <span class="fl">0.5</span>, <span class="at">group =</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"Number of COVID-19 cases"</span>)) <span class="sc">+</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="co"># X-axis labels and scaling representing Time</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">breaks =</span> <span class="fu">levels</span>(covid_data<span class="sc">$</span>month)[<span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">length</span>(<span class="fu">levels</span>(covid_data<span class="sc">$</span>month)), <span class="at">by =</span> <span class="dv">3</span>)]) <span class="sc">+</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Number of COVID-19 cases"</span> <span class="ot">=</span> <span class="st">"#D21404"</span>)) <span class="sc">+</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"top"</span>,</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.box =</span> <span class="st">"horizontal"</span>,</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.box.just =</span> <span class="st">"left"</span>,</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.margin =</span> <span class="fu">margin</span>(<span class="dv">20</span>, <span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">0</span>),</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.spacing.x =</span> <span class="fu">unit</span>(<span class="dv">1</span>, <span class="st">"cm"</span>),</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">vjust =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">10</span>)),</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">20</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.y.left =</span> <span class="fu">element_text</span>(<span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">r=</span><span class="dv">12</span>)),</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.y.right =</span> <span class="fu">element_text</span>(<span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">l=</span><span class="dv">12</span>)),</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Impact of COVID-19 on Inflation Rates for Selected Categories Over Time"</span>,</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Time"</span>,</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Expenditure Category"</span>,</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"Year-over-Year Price Change (%)"</span>,</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Data Type"</span>) <span class="sc">+</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">guide_colorbar</span>(<span class="at">title.position =</span> <span class="st">"top"</span>, <span class="at">title.hjust =</span> <span class="fl">0.5</span>, <span class="at">barwidth =</span> <span class="dv">10</span>, <span class="at">order =</span> <span class="dv">1</span>),</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="cn">NULL</span>, <span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">linetype =</span> <span class="fu">c</span>(<span class="st">"solid"</span>)), <span class="at">order =</span> <span class="dv">2</span>)</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="inflation_prep_files/figure-html/improved-visualisation-1.png" class="img-fluid figure-img" width="1728"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 
 </main>

@@ -42,10 +42,10 @@ inflation_data <- map_dfr(xlsx_files,function(file) {
     # Select the relevant columns and clean up the data
     select(expenditure_category = 2,
            percent_change = 4)|>
-    mutate(year = str_extract(basename(file), "\\d{4}"),  # Extract year from file name
-           month = str_extract(basename(file), "\\d{2}(?!\\d)"),  # Extract month from file name
-           expenditure_category = str_replace(expenditure_category, "\\(.*", ""))|>  # Remove parentheses and text inside to simplify category names
-    filter(!is.na(expenditure_category))  # Remove rows with NA in expenditure_category
+      mutate(year = str_extract(basename(file), "\\d{4}"),  # Extract year from file name
+      month = str_extract(basename(file), "\\d{2}(?!\\d)"),  # Extract month from file name
+      expenditure_category = str_replace(expenditure_category, "\\(.*", ""))|>  # Remove parentheses and text inside to simplify category names
+      filter(!is.na(expenditure_category))  # Remove rows with NA in expenditure_category
 })
 
 # Keep only the categories we are interested in
@@ -82,13 +82,17 @@ merged_data <- bind_rows(filtered_data, energy_data)
 #| label: finalise-long-data
 #| echo: false
 
-# 
+# merge year and month into date, rename percent_change to inflation_rate
 long_data <- merged_data %>%
   unite(date, year, month, sep = "/") %>%
   rename(inflation_rate = percent_change)
 
 # Wrap long expenditure category labels
 long_data$expenditure_category <- str_wrap(long_data$expenditure_category, width = 20)
+#view(long_data)
+
+#Save the csv
+write_csv(long_data, "data/merged/inflation_data.csv")
 
 
 
@@ -112,34 +116,39 @@ covid_data <- covid_data |>
   mutate(total_cases = (total_cases - min(total_cases, na.rm = TRUE)) / (max(total_cases, na.rm = TRUE) - min(total_cases, na.rm =TRUE))) |>
   slice(1:(n() - 5)) # Remove the 5 months data to only include up to Jan 2024
 
+#Save the csv
+write_csv(covid_data, "data/merged/covid_data.csv")
 
 
 ## -----------------------------------------------------------------------------
 #| label: improved-visualisation
-#| fig.width: 11
-#| fig.height: 5
+#| fig.width: 18
+#| fig.height: 8
 
-# Create a mapping for expenditure categories to continuous y-values
-unique_categories <- unique(long_data$expenditure_category)
-num_categories <- length(unique_categories)
-category_mapping <- data.frame(
-  expenditure_category = unique_categories,
-  y_value = seq(1, 8, length.out = num_categories)
-)
-
-# Merge the mapping with the long_data
-long_data <- merge(long_data, category_mapping, by = "expenditure_category")
+# Check if y_value already exists in long_data
+if (!"y_value" %in% colnames(long_data)) {
+  # Create a mapping for expenditure categories to continuous y-values if it doesn't exist
+  unique_categories <- unique(long_data$expenditure_category)
+  num_categories <- length(unique_categories)
+  category_mapping <- data.frame(
+    expenditure_category = unique_categories,
+    y_value = seq(1, 8, length.out = num_categories)
+  )
+  
+  # Merge the mapping with the long_data
+  long_data <- merge(long_data, category_mapping, by = "expenditure_category")
+}
 
 # Calculate the scale factor for the COVID-19 cases to fit the 0.00 to 1.00 range
 scale_factor <- max(covid_data$total_cases) / num_categories
 
 # Plot the inflation rates over time with heatmap
-ggplot() +
+final_graph <- ggplot() +
   # Inflation change heatmap
-  geom_tile(data = long_data, aes(x = date, y = y_value, fill = inflation_rate), color = "grey85") +
-  coord_fixed(ratio = 2.5) +
+  geom_tile(data = long_data, aes(x = date, y = y_value, fill = inflation_rate), color = "white", width = 0.9) +
+  coord_fixed(ratio = 1) +
   theme_minimal() +
-  scale_fill_distiller(palette = "RdYlBu") +
+  scale_fill_distiller(palette = "RdBu") +
   scale_y_continuous(breaks = category_mapping$y_value, labels = category_mapping$expenditure_category, 
                      sec.axis = sec_axis(~.*max(covid_data$total_cases), name = "Total Covid Cases (10M)")) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
@@ -147,29 +156,29 @@ ggplot() +
   geom_line(data = covid_data, aes(x = month, y = total_cases * 8 + 0.5, group = 1, color = "Number of COVID-19 cases")) +
   # X-axis labels and scaling representing Time
   scale_x_discrete(breaks = levels(covid_data$month)[seq(1, length(levels(covid_data$month)), by = 3)]) +
-  scale_color_manual(values = c("Number of COVID-19 cases" = "red")) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        axis.text.y = element_text(size = 8),
-        legend.position = "right",
-        axis.title.x = element_text(vjust = -1, margin = margin(t = 10)),
-        plot.title = element_text(hjust = 0.5),
-        axis.title.y = element_text(vjust = 2)) +
+  scale_color_manual(values = c("Number of COVID-19 cases" = "#D21404")) +
+  theme(
+    legend.position = "top",
+    legend.box = "horizontal",
+    legend.box.just = "left",
+    legend.margin = margin(20, 0, 10, 0),
+    legend.spacing.x = unit(1, "cm"),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    axis.text.y = element_text(size = 8, vjust = 0.5),
+    axis.title.x = element_text(vjust = -1, margin = margin(t = 10)),
+    plot.title = element_text(hjust = 0.5, size = 20, face = "bold"),
+    axis.title.y.left = element_text(margin = margin(r=12)),
+    axis.title.y.right = element_text(margin = margin(l=12)),
+  ) +
   labs(title = "Impact of COVID-19 on Inflation Rates for Selected Categories Over Time",
        x = "Time",
        y = "Expenditure Category",
        fill = "Year-over-Year Price Change (%)",
        color = "Data Type") +
-  guides(color = guide_legend(title = "COVID-19 Label", override.aes = list(linetype = c("solid"))))
+  guides(
+    fill = guide_colorbar(title.position = "top", title.hjust = 0.5, barwidth = 10, order = 1),
+    color = guide_legend(title = NULL, override.aes = list(linetype = c("solid")), order = 2)
+  )
 
-
-
-
-
-
-
-
-
-
-
-
+final_graph
 
