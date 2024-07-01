@@ -40,7 +40,7 @@ Inflation, the rate at which the general level of prices for goods and services 
 
 ```{r}
 #| label: fig-nbc-on-poster
-#| fig-cap: "Yearly Percentage Change in Consumer Prices for major catergories of goods in the USA, published by NBC News."
+#| fig-cap: "Yearly Perntage Change in Consumer Prices for major catergories of goods in the USA, published by NBC News."
 #| out-width: "80%"
 include_graphics("images/inflation-original-big.png")
 ```
