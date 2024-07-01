@@ -140,7 +140,7 @@ long_data <- merged_data %>%
 
 # Wrap long expenditure category labels
 long_data$expenditure_category <- str_wrap(long_data$expenditure_category, width = 20)
-view(long_data)
+#view(long_data)
 
 #Save the csv
 write_csv(long_data, "data/merged/inflation_data.csv")
@@ -181,8 +181,8 @@ write_csv(covid_data, "data/merged/covid_data.csv")
 
 ```{r}
 #| label: improved-visualisation
-#| fig.width: 11
-#| fig.height: 5
+#| fig.width: 18
+#| fig.height: 8
 
 # Create a mapping for expenditure categories to continuous y-values
 unique_categories <- unique(long_data$expenditure_category)
@@ -201,10 +201,10 @@ scale_factor <- max(covid_data$total_cases) / num_categories
 # Plot the inflation rates over time with heatmap
 ggplot() +
   # Inflation change heatmap
-  geom_tile(data = long_data, aes(x = date, y = y_value, fill = inflation_rate), color = "grey85") +
-  coord_fixed(ratio = 2.5) +
+  geom_tile(data = long_data, aes(x = date, y = y_value, fill = inflation_rate), color = "white", width = 0.9) +
+  coord_fixed(ratio = 1) +
   theme_minimal() +
-  scale_fill_distiller(palette = "RdYlBu") +
+  scale_fill_distiller(palette = "RdBu") +
   scale_y_continuous(breaks = category_mapping$y_value, labels = category_mapping$expenditure_category, 
                      sec.axis = sec_axis(~.*max(covid_data$total_cases), name = "Total Covid Cases (10M)")) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
@@ -212,19 +212,27 @@ ggplot() +
   geom_line(data = covid_data, aes(x = month, y = total_cases * 8 + 0.5, group = 1, color = "Number of COVID-19 cases")) +
   # X-axis labels and scaling representing Time
   scale_x_discrete(breaks = levels(covid_data$month)[seq(1, length(levels(covid_data$month)), by = 3)]) +
-  scale_color_manual(values = c("Number of COVID-19 cases" = "red")) +
-  theme(legend.position = "right",,
-        axis.text.x = element_text(angle = 45, hjust = 1),
-        axis.text.y = element_text(size = 8, vjust = 0.5),
-        axis.title.x = element_text(vjust = -1, margin = margin(t = 10)),
-        plot.title = element_text(hjust = 0.5),
-        axis.title.y.left = element_text(margin = margin(r=12)),
-        axis.title.y.right = element_text(margin = margin(l=12)),
-        ) +
+  scale_color_manual(values = c("Number of COVID-19 cases" = "#D21404")) +
+  theme(
+    legend.position = "top",
+    legend.box = "horizontal",
+    legend.box.just = "left",
+    legend.margin = margin(20, 0, 10, 0),
+    legend.spacing.x = unit(1, "cm"),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    axis.text.y = element_text(size = 8, vjust = 0.5),
+    axis.title.x = element_text(vjust = -1, margin = margin(t = 10)),
+    plot.title = element_text(hjust = 0.5, size = 20, face = "bold"),
+    axis.title.y.left = element_text(margin = margin(r=12)),
+    axis.title.y.right = element_text(margin = margin(l=12)),
+  ) +
   labs(title = "Impact of COVID-19 on Inflation Rates for Selected Categories Over Time",
        x = "Time",
        y = "Expenditure Category",
        fill = "Year-over-Year Price Change (%)",
        color = "Data Type") +
-  guides(color = guide_legend(title = "COVID-19 Label", override.aes = list(linetype = c("solid"))))
+  guides(
+    fill = guide_colorbar(title.position = "top", title.hjust = 0.5, barwidth = 10, order = 1),
+    color = guide_legend(title = NULL, override.aes = list(linetype = c("solid")), order = 2)
+  )
 ```
