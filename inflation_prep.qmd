@@ -213,12 +213,14 @@ ggplot() +
   # X-axis labels and scaling representing Time
   scale_x_discrete(breaks = levels(covid_data$month)[seq(1, length(levels(covid_data$month)), by = 3)]) +
   scale_color_manual(values = c("Number of COVID-19 cases" = "red")) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        axis.text.y = element_text(size = 8),
-        legend.position = "right",
+  theme(legend.position = "right",,
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text.y = element_text(size = 8, vjust = 0.5),
         axis.title.x = element_text(vjust = -1, margin = margin(t = 10)),
         plot.title = element_text(hjust = 0.5),
-        axis.title.y = element_text(vjust = 2)) +
+        axis.title.y.left = element_text(margin = margin(r=12)),
+        axis.title.y.right = element_text(margin = margin(l=12)),
+        ) +
   labs(title = "Impact of COVID-19 on Inflation Rates for Selected Categories Over Time",
        x = "Time",
        y = "Expenditure Category",
