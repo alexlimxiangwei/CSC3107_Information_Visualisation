@@ -1,6 +1,9 @@
+// Set global font to sans-serif
+#set text(font: "sans-serif")
+
 // Some definitions presupposed by pandoc's typst output.
 #let blockquote(body) = [
-  #set text( size: 0.92em )
+  #set text( size: 0.92em,font: "sans-serif" )
   #block(inset: (left: 1.5em, top: 0.2em, bottom: 0.2em))[#body]
 ]
 
@@ -217,7 +220,7 @@
   body
 ) = {
   // Set the body font.
-  set text(font: "STIX Two Text", size: 16pt)
+  set text(font: "sans-serif", size: 16pt)
   let sizes = size.split("x")
   let width = int(sizes.at(0)) * 1in
   let height = int(sizes.at(1)) * 1in
@@ -246,11 +249,11 @@
         inset: 20pt,
         radius: 10pt,
         [
-          #text(font: "Courier", size: footer_url_font_size, footer_url) 
+          #text(font: "sans-serif", size: footer_url_font_size, footer_url) 
           #h(1fr) 
           #text(size: footer_text_font_size, smallcaps(footer_text)) 
           #h(1fr) 
-          #text(font: "Courier", size: footer_url_font_size, footer_email_ids)
+          #text(font: "sans-serif", size: footer_url_font_size, footer_email_ids)
         ]
       )
     ]
