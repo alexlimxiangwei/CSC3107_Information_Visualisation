@@ -42,10 +42,10 @@ inflation_data <- map_dfr(xlsx_files,function(file) {
     # Select the relevant columns and clean up the data
     select(expenditure_category = 2,
            percent_change = 4)|>
-      mutate(year = str_extract(basename(file), "\\d{4}"),  # Extract year from file name
-      month = str_extract(basename(file), "\\d{2}(?!\\d)"),  # Extract month from file name
-      expenditure_category = str_replace(expenditure_category, "\\(.*", ""))|>  # Remove parentheses and text inside to simplify category names
-      filter(!is.na(expenditure_category))  # Remove rows with NA in expenditure_category
+    mutate(year = str_extract(basename(file), "\\d{4}"),  # Extract year from file name
+           month = str_extract(basename(file), "\\d{2}(?!\\d)"),  # Extract month from file name
+           expenditure_category = str_replace(expenditure_category, "\\(.*", ""))|>  # Remove parentheses and text inside to simplify category names
+    filter(!is.na(expenditure_category))  # Remove rows with NA in expenditure_category
 })
 
 # Keep only the categories we are interested in
@@ -89,7 +89,7 @@ long_data <- merged_data %>%
 
 # Wrap long expenditure category labels
 long_data$expenditure_category <- str_wrap(long_data$expenditure_category, width = 20)
-view(long_data)
+
 
 
 ## -----------------------------------------------------------------------------
@@ -112,7 +112,6 @@ covid_data <- covid_data |>
   mutate(total_cases = (total_cases - min(total_cases, na.rm = TRUE)) / (max(total_cases, na.rm = TRUE) - min(total_cases, na.rm =TRUE))) |>
   slice(1:(n() - 5)) # Remove the 5 months data to only include up to Jan 2024
 
-View(covid_data)
 
 
 ## -----------------------------------------------------------------------------
@@ -161,4 +160,16 @@ ggplot() +
        fill = "Year-over-Year Price Change (%)",
        color = "Data Type") +
   guides(color = guide_legend(title = "COVID-19 Label", override.aes = list(linetype = c("solid"))))
+
+
+
+
+
+
+
+
+
+
+
+
 

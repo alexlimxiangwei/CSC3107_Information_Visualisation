@@ -184,22 +184,25 @@ write_csv(covid_data, "data/merged/covid_data.csv")
 #| fig.width: 18
 #| fig.height: 8
 
-# Create a mapping for expenditure categories to continuous y-values
-unique_categories <- unique(long_data$expenditure_category)
-num_categories <- length(unique_categories)
-category_mapping <- data.frame(
-  expenditure_category = unique_categories,
-  y_value = seq(1, 8, length.out = num_categories)
-)
-
-# Merge the mapping with the long_data
-long_data <- merge(long_data, category_mapping, by = "expenditure_category")
+# Check if y_value already exists in long_data
+if (!"y_value" %in% colnames(long_data)) {
+  # Create a mapping for expenditure categories to continuous y-values if it doesn't exist
+  unique_categories <- unique(long_data$expenditure_category)
+  num_categories <- length(unique_categories)
+  category_mapping <- data.frame(
+    expenditure_category = unique_categories,
+    y_value = seq(1, 8, length.out = num_categories)
+  )
+  
+  # Merge the mapping with the long_data
+  long_data <- merge(long_data, category_mapping, by = "expenditure_category")
+}
 
 # Calculate the scale factor for the COVID-19 cases to fit the 0.00 to 1.00 range
 scale_factor <- max(covid_data$total_cases) / num_categories
 
 # Plot the inflation rates over time with heatmap
-ggplot() +
+final_graph <- ggplot() +
   # Inflation change heatmap
   geom_tile(data = long_data, aes(x = date, y = y_value, fill = inflation_rate), color = "white", width = 0.9) +
   coord_fixed(ratio = 1) +
@@ -235,4 +238,6 @@ ggplot() +
     fill = guide_colorbar(title.position = "top", title.hjust = 0.5, barwidth = 10, order = 1),
     color = guide_legend(title = NULL, override.aes = list(linetype = c("solid")), order = 2)
   )
+
+final_graph
 ```
