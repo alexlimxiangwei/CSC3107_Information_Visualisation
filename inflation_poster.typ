@@ -228,7 +228,7 @@
   num_columns = int(num_columns)
   univ_logo_column_size = int(univ_logo_column_size) * 1in
   title_column_size = int(title_column_size) * 1in
-  footer_url_font_size = int(footer_url_font_size) * 1pt
+  footer_url_font_size = int(footer_url_font_size) * 0pt
   footer_text_font_size = int(footer_text_font_size) * 1pt
 
   // Configure the page.
@@ -375,7 +375,7 @@
    footer_email_ids: [singaporetech.edu.sg], 
 
   // Color of the footer.
-   footer_color: "ebcfb2", 
+   footer_color: "ff0000", 
 
   // DEFAULTS
   // ========
@@ -451,29 +451,20 @@ numbering: "1",
 
 = Suggested Improvements
 <suggested-improvements>
-+ #emph[Adding more layers of information to the chart.]
++ #emph[Increasing the range of dates] to provide a more comprehensive overview of inflation trends over time.
 
-  Information like:
++ #emph[Adding a COVID-19 graph] to show the correlation between COVID-19 cases and inflation rates.
 
-  - Inflation was due to major events like COVID-19, recessions, or weather changes \(e.g.~hotter/colder seasons)
-  - Inflation in different geographical locations
++ #emph[Improving the year-over-year price change\(%) scale] to better represent the inflation rates for different categories of goods.
 
-+ #emph[Varying the size of the square boxes] to convey additional information \(e.g.~size of industry, as each category has varying impacts on the economy.
-
-+ #emph[Incorporate mirrored histograms, stacked histograms, or separate histograms] to present the data more effectively.
-
-+ #emph[Shade areas] to represent significant events such as recessions or the COVID-19 pandemic.
-
-+ #emph[Add an interactive straight line] for readers to follow across the graph, enhancing readability and comprehension.
-
-+ #emph[Add a category like "Others"] to capture data that does not fit into the predefined categories, ensuring completeness.
++ #emph[Added source for cross reference] for COVID-19 data to provide transparency and credibility to the information presented in the Bureau of Labor Statistics.
 
 = Implementation
 <implementation>
 == Data
 <data>
 - #strong[Data Source:] The data used for this project is based on the visualization data from Joella Carman and Nigel Chiwaya, featured on NBC News. They utilized the information from the Bureau of Labor Statistics and Energy Information Administration data to depict year-over-year inflation for major categories of goods.
-- #strong[Data Period:] Our analysis makes use of data from January 2019 to March 2024, rather than the initial period from May 2023 to April 2024. With this longer time frame, the inflation rates for the chosen main product groups are more clearly displayed.
+- #strong[Data Period:] Our analysis makes use of data from January 2020 to March 2024, rather than the initial period from May 2023 to April 2024. With this longer time frame, the inflation rates for the chosen main product groups are more clearly displayed.
 
 == Software
 <software>
@@ -489,6 +480,8 @@ We used the Quarto publication framework and the R programming language, along w
 - #emph[grid] for graphical layout management
 
 #v(2em)
+#v(2em)
+#v(2em)
 = Improved Visualization
 <improved-visualization>
 #block[
@@ -499,14 +492,13 @@ We used the Quarto publication framework and the R programming language, along w
 ]
 = Further Suggestions for Interactivity
 <further-suggestions-for-interactivity>
-The visualization was designed for a poster so no interactive features were put in place including infotip. However when data is visualized into an HTML document, one can make it interactive by using R packages like #emph[plotly];.
++ #emph[Interactive Tooltip];: Add an interactive tooltip to display the exact inflation rate and COVID-19 cases for each category and date when hovering over the heatmap tiles and line graph.
++ #emph[Interactive Legend];: Make the legend interactive to allow users to filter the categories displayed on the heatmap.
++ #emph[Zoom Functionality];: Implement a zoom feature to allow users to focus on specific time periods and categories for a more detailed analysis.
++ #emph[Data Filtering];: Add a filter to allow users to select specific categories or time periods for a more focused analysis.
+
+These features would enhance the user experience and provide more detailed insights into the data and could be implemented using R packages like #emph[plotly] or #emph[Shiny];.
 
 = Conclusion
 <conclusion>
-== Key Findings and Insights
-<key-findings-and-insights>
-In conclusion, gasoline prices experienced substantial fluctuations, with a significant increase during the peak of COVID-19 cases, followed by a decrease, which indicates a strong correlation between the pandemic and fuel prices. Similarly, airline fares dropped sharply during the early phase of the pandemic due to travel restrictions and decreased demand but began to recover as case numbers rose, though they continued to fluctuate significantly. Energy prices initially increased, while apparel showed mild fluctuations. The category of meats, poultry, fish, and eggs experienced a steady rise in inflation rates, likely driven by supply chain disruptions and increased demand. The overall inflation rate, represented by the "All items" category, trended upward during the peaks in COVID-19 cases, suggesting a broad impact of the pandemic on inflation. After the peak, inflation rates in many categories began to normalize, although some continued to exhibit volatility.
-
-== Visualization Improvements
-<visualization-improvements>
-The enhancements to the visualization, including the integration of major events like COVID-19 and their impact on inflation, provide a richer contextual understanding of the data. The use of a continuous timeline and a heat map color gradient from blue to red effectively illustrates trends and changes over time. Additionally, incorporating COVID-19 case data adds depth, emphasizing the correlation between the pandemic and inflation fluctuations. Adjusting the x-axis ratio allows for better analysis, highlighting the significance of dates in relation to COVID-19 cases and inflation rates. These improvements make the visualization effectively illustrate trends and correlations over time.
+The enhancements to the visualization, including the integration of major event like COVID-19 and its impact on inflation, provide a richer contextual understanding of the data. The use of a continuous timeline and a heat map color gradient from blue \(inflation decrease) to red \(inflation increase) effectively illustrates trends and changes over time and provides more clarity compared to the original plot. Additionally, incorporating COVID-19 case data adds depth, emphasizing the correlation between the pandemic and inflation fluctuations. Adjusting the x-axis ratio allows for better analysis, highlighting the significance of dates in relation to COVID-19 cases and inflation rates. The addition of bins allow ease of readability for users to distinguish the shades of color. These improvements make the visualization effectively illustrate trends and correlations over time.
