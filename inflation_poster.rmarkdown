@@ -1,0 +1,199 @@
+---
+title: Inflation in the USA 
+format:
+  poster-typst: 
+    size: "33x23" # Approximately A1
+    poster-authors: "Loh Xian Ming Jeremiah, Wong Zhen Line, Veleon Lim Ming Zhe, Farah Binte Mohamed Tajudeen, Lim Xiang Wei Alex, Javier Ng Wei Cheng"
+    departments: "Computing Science"
+    institution-logo: "./images/sit-logo.png"
+    univ-logo-scale: 50
+    footer-text: "Information Visualization 2024"
+    footer-emails: "singaporetech.edu.sg"
+    footer-color: "ebcfb2"
+    keep-typ: true
+ 
+execute:
+  echo: false
+knitr:
+  opts_chunk:
+    dev: svglite
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+library(knitr)
+purl("inflation_prep.qmd")
+source("inflation_prep.R")
+```
+
+
+# Introduction
+
+Inflation, the rate at which the general level of prices for goods and services rises, eroding purchasing power, is a key economic indicator. It impacts everything from the cost of groceries to the interest rates on loans[^1]. While moderate inflation is a sign of a growing economy, excessive inflation can reduce the value of money, leading to financial strain for consumers. In this project, we have built on a comprehensive visualization to monitor inflation across various consumer metrics in the USA, originally published by NBC News [^2] (@fig-nbc-on-poster). The visualization below shows monthly changes in consumer prices compared to the same time the previous year. Despite the visualization's effectiveness in showing an overview of the price changes, we aim to improve certain aspects to better highlight the underlying trend of inflation change in a year-over-year basis of different consumer metrics.
+
+[^1]: https://www.hbs.edu/ris/Publication%20Files/Paper_Covid_Price_IMFER_23_4663bd2c-c1a8-4448-aa9f-98a3bc197142.pdf
+
+[^2]: <https://www.nbcnews.com/data-graphics/inflation-tracker-how-much-prices-rising-us-consumers-n1296378>
+
+# Previous Visualization
+
+
+```{r}
+#| label: fig-nbc-on-poster
+#| fig-cap: "Yearly Perntage Change in Consumer Prices for major catergories of goods in the USA, published by NBC News."
+#| out-width: "80%"
+include_graphics("images/inflation-original-big.png")
+```
+
+
+# Strengths
+
+-   The plot title and subtitle is clear and informative, immediately providing context and helping readers to understand the focus of the visualization.
+-   The heatmap design effectively conveys a high information content without cluttering the plot. This allows for quick and intuitive understanding of the data trends.
+-   Pointing with the mouse at a tile opens an infotip, enabling readers to retrieve overall yearly percentage changes for each category.
+-   The colors chosen (red and blue) are color-blind friendly, ensuring that the visualization is accessible to a wider audience.
+-   The inclusion of detailed source information at the bottom of the chart adds credibility and transparency to the data presented.
+-   The overall design is user-friendly, with a clean layout, intuitive color coding, and easy-to-read labels, making the visualization accessible to a broad audience.
+-   The color legend is clear and informative which helps readers to quickly understand the meaning of the the colors (red-increasing inflation, blue-decreasing inflation) and the range of percentage changes displayed.
+
+# Suggested Improvements
+
+1.  *Adding more layers of information to the chart.*
+
+    Information like:
+
+    -   Inflation was due to major events like COVID-19, recessions, or weather changes (e.g. hotter/colder seasons)
+    -   Inflation in different geographical locations
+
+2.  *Varying the size of the square boxes* to convey additional information (e.g. size of industry, as each category has varying impacts on the economy.
+
+3.  *Incorporate mirrored histograms, stacked histograms, or separate histograms* to present the data more effectively.
+
+4.  *Shade areas* to represent significant events such as recessions or the COVID-19 pandemic.
+
+5.  *Add an interactive straight line* for readers to follow across the graph, enhancing readability and comprehension.
+
+6.  *Add a category like "Others"* to capture data that does not fit into the predefined categories, ensuring completeness.
+
+# Implementation
+
+## Data
+
+-   **Data Source:** The data used for this project is based on the visualization data from Joella Carman and Nigel Chiwaya, featured on NBC News. They utilized the information from the Bureau of Labor Statistics and Energy Information Administration data to depict year-over-year inflation for major categories of goods.
+-   **Data Period:** Our analysis makes use of data from January 2019 to March 2024, rather than the initial period from May 2023 to April 2024. With this longer time frame, the inflation rates for the chosen main product groups are more clearly displayed.
+
+## Software
+
+We used the Quarto publication framework and the R programming language, along with the following third-party packages:
+
+-   *readxl* for data import
+-   *tidyverse* for data transformation, including *ggplot2* for visualization based on the grammar of graphics
+-   *knitr* for dynamic document generation
+-   *purrr* for functional programming tools
+-   *scales* for additional scaling functions
+-   *stringr* for string manipulation
+-   *dplyr* for data manipulation
+-   *grid* for graphical layout management
+
+
+```{=typst}
+#v(2em)
+```
+
+# Improved Visualization
+
+
+```{r}
+#| label: improved-visualization
+#| fig.width: 9
+#| fig.height: 5
+
+library(ggplot2)
+library(RColorBrewer)
+library(scales)
+# Check if y_value already exists in long_data
+if (!"y_value" %in% colnames(long_data)) {
+  # Create a mapping for expenditure categories to continuous y-values if it doesn't exist
+  unique_categories <- unique(long_data$expenditure_category)
+  num_categories <- length(unique_categories)
+  category_mapping <- data.frame(
+    expenditure_category = unique_categories,
+    y_value = seq(1, 8, length.out = num_categories)
+  )
+  
+  # Merge the mapping with the long_data
+  long_data <- merge(long_data, category_mapping, by = "expenditure_category")
+}
+
+# Calculate the scale factor for the COVID-19 cases to fit the 0.00 to 1.00 range
+scale_factor <- max(covid_data$total_cases) / num_categories
+
+
+# Plot the inflation rates over time with heatmap
+ggplot() +
+  # Inflation change heatmap
+  geom_tile(data = long_data, aes(x = date, y = y_value, fill = inflation_rate), color = "white", width = 1) +
+  coord_fixed(ratio = 1) +
+  theme_minimal() +
+  scale_fill_fermenter(palette = "RdBu", breaks = seq(-50, 50, 10), limits = c(-50, 50)) +
+  scale_y_continuous(breaks = category_mapping$y_value, labels = category_mapping$expenditure_category, 
+                     sec.axis = sec_axis(~.*max(covid_data$total_cases), name = "Total Covid Cases (10M)")) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  # Covid cases line graph
+  geom_line(data = covid_data, aes(x = month, y = total_cases * 8 + 0.5, group = 1, color = "Number of COVID-19 cases")) +
+  # X-axis labels and scaling representing Time
+  scale_x_discrete(breaks = levels(covid_data$month)[seq(1, length(levels(covid_data$month)), by = 3)]) +
+  scale_color_manual(values = c("Number of COVID-19 cases" = "#D21404")) +
+  theme(
+    legend.position = "top",
+    legend.box = "horizontal",
+    legend.box.just = "left",
+    legend.margin = margin(20, 0, 10, 0),
+    legend.spacing.x = unit(1, "cm"),
+    legend.key.width = unit(1.25, "cm"),
+
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    axis.text.y = element_text(size = 10, vjust = 0.5),
+    axis.title.x = element_text(vjust = -1, margin = margin(t = 10)),
+    plot.title = element_text(hjust = 0.5, size = 20, face = "bold"),
+    axis.title.y.left = element_text(margin = margin(r=10)),
+    axis.title.y.right = element_text(margin = margin(l=10)),
+  ) +
+  labs(title = "Impact of COVID-19 on Inflation Rates \nfor Selected Categories Over Time",
+       x = "Time",
+       y = "Expenditure Category",
+       fill = "Year-over-Year Price Change (%)",
+       color = "Data Type") +
+  guides(
+    fill = guide_colorsteps(title.position = "top", title.hjust = 0.5, barwidth = 10, order = 1),
+    color = guide_legend(title = NULL, override.aes = list(linetype = c("solid")), order = 2)
+  )
+```
+
+
+# Further Suggestions for Interactivity
+
+The visualization was designed for a poster so no interactive features were put in place including infotip. However when data is visualized into an HTML document, one can make it interactive by using R packages like *plotly*. 
+
+# Conclusion
+
+## Key Findings and Insights
+
+The analysis of the correlation between US inflation rates for various expenditure categories and the number of COVID-19 cases reveals significant insights into the pandemic's impact on the economy. The visualization effectively highlights how the peak in COVID-19 cases around late 2020 and early 2021 coincides with noticeable changes in inflation rates across several categories.
+
+Gasoline prices experienced substantial fluctuations, with a significant increase during the peak of COVID-19 cases, followed by a decrease. This pattern indicates a strong correlation between the pandemic and fuel prices. Similarly, airline fares dropped sharply during the early phase of the pandemic due to travel restrictions and decreased demand but began to recover as case numbers rose, though they continued to fluctuate significantly.
+
+Other expenditure categories, such as apparel and energy, also displayed changes in inflation rates. Energy prices initially increased, while apparel showed mild fluctuations. The category of meats, poultry, fish, and eggs experienced a steady rise in inflation rates, likely driven by supply chain disruptions and increased demand.
+
+The overall inflation rate, represented by the "All items" category, trended upward during the peaks in COVID-19 cases, suggesting a broad impact of the pandemic on inflation. After the peak, inflation rates in many categories began to normalize, although some continued to exhibit volatility.
+
+The observed correlation between COVID-19 cases and inflation rates can be attributed to factors such as supply chain disruptions, shifts in consumer behavior, and government policies. Higher case numbers often resulted in lockdowns, reduced production capacities, and altered consumer demand, all contributing to price volatility.
+
+In summary, the visualization effectively demonstrates that the number of COVID-19 cases significantly influenced inflation rates across various expenditure categories in the US. Categories such as gasoline, airline fares, and overall inflation show a clear correlation, highlighting the pandemic's impact on supply and demand dynamics, leading to notable price fluctuations.
+
+## Visualization Improvements
+
+The enhancements to the visualization, including the integration of major events like COVID-19 and their impact on inflation, provide a richer contextual understanding of the data. The use of a continuous timeline and a heat map color gradient from blue to red effectively illustrates trends and changes over time. Additionally, incorporating COVID-19 case data adds depth, emphasizing the correlation between the pandemic and inflation fluctuations. Adjusting the x-axis ratio allows for better analysis, highlighting the significance of dates in relation to COVID-19 cases and inflation rates. These improvements make the visualization more comprehensive and insightful, effectively illustrating trends and correlations over time.
+
