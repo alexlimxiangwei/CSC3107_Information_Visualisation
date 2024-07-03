@@ -181,4 +181,3 @@ covid_data <- covid_data |>
 #Save the csv
 write_csv(covid_data, "data/merged/covid_data.csv")
 ```
-
