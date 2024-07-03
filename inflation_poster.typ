@@ -148,6 +148,7 @@
         block(fill: white, width: 100%, inset: 8pt, body)))
 }
 
+#set text(font: "helvetica.ttf")
 
 #let poster(
   // The poster's size.
@@ -427,7 +428,7 @@ Inflation, the rate at which the general level of prices for goods and services 
 ], caption: figure.caption(
 position: bottom, 
 [
-Yearly Perntage Change in Consumer Prices for major catergories of goods in the USA, published by NBC News.
+Yearly Percentage Change in Consumer Prices for major catergories of goods in the USA, published by NBC News.
 ]), 
 kind: "quarto-float-fig", 
 supplement: "Figure", 

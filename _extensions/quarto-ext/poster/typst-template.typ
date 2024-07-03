@@ -1,3 +1,4 @@
+#set text(font: "helvetica.ttf")
 
 #let poster(
   // The poster's size.
