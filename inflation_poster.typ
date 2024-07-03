@@ -428,7 +428,7 @@ Inflation, the rate at which the general level of prices for goods and services 
 ], caption: figure.caption(
 position: bottom, 
 [
-Yearly Percentage Change in Consumer Prices for major catergories of goods in the USA, published by NBC News.
+Yearly Perntage Change in Consumer Prices for major catergories of goods in the USA, published by NBC News.
 ]), 
 kind: "quarto-float-fig", 
 supplement: "Figure", 
