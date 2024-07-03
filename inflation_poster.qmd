@@ -159,7 +159,8 @@ ggplot() +
        x = "Time",
        y = "Expenditure Category",
        fill = "Year-over-Year Price Change (%)",
-       color = "Data Type") +
+       color = "Data Type",
+       caption = "Source: Bureau of Labor Statistics and Energy Information Administration & WHO") +
   guides(
     fill = guide_colorsteps(title.position = "top", title.hjust = 0.5, barwidth = 10, order = 1),
     color = guide_legend(title = NULL, override.aes = list(linetype = c("solid")), order = 2)
