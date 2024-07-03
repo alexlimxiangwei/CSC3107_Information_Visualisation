@@ -145,7 +145,8 @@ ggplot() +
     breaks = category_mapping$y_value,
     labels = category_mapping$expenditure_category,
     sec.axis = sec_axis(~ . * max(covid_data$total_cases),
-                        name = "Total Covid Cases (10M)")
+      name = "Total Covid Cases (10M)"
+    )
   ) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   # Covid cases line graph
@@ -183,7 +184,8 @@ ggplot() +
     y = "Expenditure Category",
     fill = "Year-over-Year Price Change (%)",
     color = "Data Type",
-    caption = "Source: Bureau of Labor Statistics and Energy Information Administration & WHO"
+    caption = "Source: Bureau of Labor Statistics and 
+               Energy Information Administration & WHO"
   ) +
   guides(
     fill = guide_colorsteps(
@@ -211,5 +213,4 @@ The visualization was designed for a poster so no interactive features were put 
 In conclusion, gasoline prices experienced substantial fluctuations, with a significant increase during the peak of COVID-19 cases, followed by a decrease, which indicates a strong correlation between the pandemic and fuel prices. Similarly, airline fares dropped sharply during the early phase of the pandemic due to travel restrictions and decreased demand but began to recover as case numbers rose, though they continued to fluctuate significantly. Energy prices initially increased, while apparel showed mild fluctuations. The category of meats, poultry, fish, and eggs experienced a steady rise in inflation rates, likely driven by supply chain disruptions and increased demand. The overall inflation rate, represented by the "All items" category, trended upward during the peaks in COVID-19 cases, suggesting a broad impact of the pandemic on inflation. After the peak, inflation rates in many categories began to normalize, although some continued to exhibit volatility. 
 
 ## Visualization Improvements
-
 The enhancements to the visualization, including the integration of major events like COVID-19 and their impact on inflation, provide a richer contextual understanding of the data. The use of a continuous timeline and a heat map color gradient from blue to red effectively illustrates trends and changes over time. Additionally, incorporating COVID-19 case data adds depth, emphasizing the correlation between the pandemic and inflation fluctuations. Adjusting the x-axis ratio allows for better analysis, highlighting the significance of dates in relation to COVID-19 cases and inflation rates. These improvements make the visualization effectively illustrate trends and correlations over time.
