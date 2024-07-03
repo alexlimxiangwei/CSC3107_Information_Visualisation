@@ -369,7 +369,7 @@
    footer_text: [Information Visualization 2024], 
 
   // Any URL, like a link to the conference website.
-  
+   footer_url: [‎], 
 
   // Emails of the authors.
    footer_email_ids: [singaporetech.edu.sg], 
@@ -451,22 +451,13 @@ numbering: "1",
 
 = Suggested Improvements
 <suggested-improvements>
-+ #emph[Adding more layers of information to the chart.]
++ #emph[Increasing the range of dates] to provide a more comprehensive overview of inflation trends over time.
 
-  Information like:
++ #emph[Adding a COVID-19 graph] to show the correlation between COVID-19 cases and inflation rates.
 
-  - Inflation was due to major events like COVID-19, recessions, or weather changes \(e.g.~hotter/colder seasons)
-  - Inflation in different geographical locations
++ #emph[Improving the year-over-year price change\(%) scale] to better represent the inflation rates for different categories of goods.
 
-+ #emph[Varying the size of the square boxes] to convey additional information \(e.g.~size of industry, as each category has varying impacts on the economy.
-
-+ #emph[Incorporate mirrored histograms, stacked histograms, or separate histograms] to present the data more effectively.
-
-+ #emph[Shade areas] to represent significant events such as recessions or the COVID-19 pandemic.
-
-+ #emph[Add an interactive straight line] for readers to follow across the graph, enhancing readability and comprehension.
-
-+ #emph[Add a category like "Others"] to capture data that does not fit into the predefined categories, ensuring completeness.
++ #emph[Added source for cross reference] for COVID-19 data to provide transparency and credibility to the information presented in the Bureau of Labor Statistics.
 
 = Implementation
 <implementation>
@@ -509,4 +500,4 @@ In conclusion, gasoline prices experienced substantial fluctuations, with a sign
 
 == Visualization Improvements
 <visualization-improvements>
-The enhancements to the visualization, including the integration of major events like COVID-19 and their impact on inflation, provide a richer contextual understanding of the data. The use of a continuous timeline and a heat map color gradient from blue to red effectively illustrates trends and changes over time. Additionally, incorporating COVID-19 case data adds depth, emphasizing the correlation between the pandemic and inflation fluctuations. Adjusting the x-axis ratio allows for better analysis, highlighting the significance of dates in relation to COVID-19 cases and inflation rates. These improvements make the visualization effectively illustrate trends and correlations over time.
+The enhancements to the visualization, including the integration of major events like COVID-19 and their impact on inflation, provide a richer contextual understanding of the data. The use of a continuous timeline and a heat map color gradient from blue \(inflation decrease) to red \(inflation increase) effectively illustrates trends and changes over time and provides more clarity compared to the original plot. Additionally, incorporating COVID-19 case data adds depth, emphasizing the correlation between the pandemic and inflation fluctuations. Adjusting the x-axis ratio allows for better analysis, highlighting the significance of dates in relation to COVID-19 cases and inflation rates. The addition of bins allow ease of readability for users to distinguish the shades of color. These improvements make the visualization effectively illustrate trends and correlations over time.
