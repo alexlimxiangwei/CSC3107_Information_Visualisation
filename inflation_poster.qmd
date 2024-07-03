@@ -8,7 +8,6 @@ format:
     institution-logo: "./images/sit-logo.png"
     univ-logo-scale: 50
     footer-text: "Information Visualization 2024"
-    footer-url: "‎ "
     footer-emails: "singaporetech.edu.sg"
     footer-color: "ebcfb2"
     keep-typ: true
