@@ -19,10 +19,10 @@
   // Footer text.
   // For instance, Name of Conference, Date, Location.
   // or Course Name, Date, Instructor.
-  footer_text: "Footer Text",
+  footer_text: "",
 
   // Any URL, like a link to the conference website.
-  footer_url: "Footer URL",
+  footer_url: "Information Visualisation",
 
   // Email IDs of the authors.
   footer_email_ids: "Email IDs (separated by commas)",
@@ -89,8 +89,8 @@
     margin: 
       (top: 1in, left: 2in, right: 2in, bottom: 2in),
     footer: [
-      #set align(center)
-      #set text(32pt)
+      #set align(left)
+      #set text(32pt, white)
       #block(
         fill: rgb(footer_color),
         width: 100%,

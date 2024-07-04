@@ -1,6 +1,6 @@
 ## -----------------------------------------------------------------------------
 #| label: library
-#| include: false
+#| message: false
 #| authors: Loh Xian Ming Jeremiah, Wong Zhen Line, Veleon Lim Ming Zhe, Farah Binte Mohamed Tajudeen, Lim Xiang Wei Alex, Javier Ng Wei Cheng
 
 library(tidyverse)
@@ -17,16 +17,14 @@ library(dplyr)
 ## -----------------------------------------------------------------------------
 #| label: fig-inflation
 #| echo: false
-#| fig.cap: "Visualising inflation in the USA from May 2023 to Apr 2024
-#|  by @Joella_Carman and @Nigel_Chiwaya."
+#| fig-cap: "Visualising inflation in the USA from May 2023 to Apr 2024 by Joella_Carman and Nigel_Chiwaya @chiwaya_2022_inflation."
 
 include_graphics("images/inflation-original-big.png")
 
 
 ## -----------------------------------------------------------------------------
 #| label: merge-files
-#| echo: false
-#| include: false
+#| message: false
 
 # Get a list of all Consumer Price Index(CPI) XLSX file paths
 xlsx_files <- list.files(
@@ -81,11 +79,13 @@ filtered_data <- inflation_data %>%
       "Meat and Eggs"
     )
   )
+# Display data after filtering
+filtered_data
 
 
 ## -----------------------------------------------------------------------------
 #| label: merge-electricity-data
-#| include: false
+#| warning: false
 # Get a list of all the energy data XLSX file paths
 xlsx_files <- list.files(
   path = "data/raw/energy",
@@ -109,11 +109,13 @@ energy_data <- map_dfr(xlsx_files, ~ {
 
 # Merge filtered CPI data and energy data
 merged_data <- bind_rows(filtered_data, energy_data)
+# Display the data after merging with electricity category
+merged_data
 
 
 ## -----------------------------------------------------------------------------
 #| label: finalise-long-data
-#| echo: false
+#| warning: false
 
 # merge year and month into date, rename percent_change to inflation_rate
 long_data <- merged_data %>%
@@ -127,11 +129,12 @@ long_data$expenditure_category <- str_wrap(long_data$expenditure_category,
 
 # Save the csv
 write_csv(long_data, "data/merged/inflation_data.csv")
+# Display data after pivoting to long format
+long_data
 
 
 ## -----------------------------------------------------------------------------
 #| label: merge-covid-data
-#| include: false
 
 covid_data <- read_csv("data/raw/covid/WHO-COVID-19-global-data.csv")
 
@@ -152,4 +155,6 @@ covid_data <- covid_data |>
 
 # Save the csv
 write_csv(covid_data, "data/merged/covid_data.csv")
+# Display covid data
+covid_data
 

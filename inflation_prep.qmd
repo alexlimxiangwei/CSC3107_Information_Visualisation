@@ -1,19 +1,27 @@
 ---
 title: "Visualising inflation in the USA (2019-2024)"
 subtitle: "Data preparation"
+author: 
+  - Loh Xian Ming Jeremiah
+  - Wong Zhen Line
+  - Veleon Lim Ming Zhe
+  - Farah Binte Mohamed Tajudeen
+  - Lim Xiang Wei Alex
+  - Javier Ng Wei Cheng
 format: html
 editor: visual
+bibliography: references.bib
 ---
 
 # Introduction
 
-This document contains the data engineering required to reconstruct and improve the plot by @Joella_Carman and @Nigel_Chiwaya, shown in @NBC_News, depicting inflation year over year for major categories of goods (May 2023 to Apr 2024).
+This document contains the data engineering required to reconstruct and improve the plot by @archived and @usenergyinformationadministration_2016_electric, shown in @chiwaya_2022_inflation, depicting inflation year over year for major categories of goods (May 2023 to Apr 2024).
 
 The code below requires the following packages:
 
 ```{r}
 #| label: library
-#| include: false
+#| message: false
 #| authors: Loh Xian Ming Jeremiah, Wong Zhen Line, Veleon Lim Ming Zhe, Farah Binte Mohamed Tajudeen, Lim Xiang Wei Alex, Javier Ng Wei Cheng
 
 library(tidyverse)
@@ -30,15 +38,14 @@ library(dplyr)
 ```{r}
 #| label: fig-inflation
 #| echo: false
-#| fig.cap: "Visualising inflation in the USA from May 2023 to Apr 2024
-#|  by @Joella_Carman and @Nigel_Chiwaya."
+#| fig-cap: "Visualising inflation in the USA from May 2023 to Apr 2024 by Joella_Carman and Nigel_Chiwaya @chiwaya_2022_inflation."
 
 include_graphics("images/inflation-original-big.png")
 ```
 
 # Data Cleaning
 
-@Joella_Carman and @Nigel_Chiwaya based their visualization data on [Bureau of Labor Statistics](https://www.bls.gov/cpi/tables/supplemental-files/) and [Energy Information Administration](https://www.eia.gov/electricity/monthly/) data, available in XLXS format with each row representing a major category of goods.
+Joella_Carman and Nigel_Chiwaya based their visualization data on Bureau of Labor Statistics @archived and Energy Information Administration @usenergyinformationadministration_2016_electric data, available in XLXS format with each row representing a major category of goods.
 
 Instead of only May 2023 to Apr 2024, we will instead use data from Jan 2019 to Jan 2024. Having 5 years of data will give us a clearer picture of the inflation rates for the major categories of goods.
 
@@ -62,12 +69,11 @@ For our data processing purposes, we will only retain rows where `Expenditure ca
 
 -   `Gasoline`: Gas
 
-These categories are in line with those in the original plot shown in @NBC_News.
+These categories are in line with those in the original plot shown in NBC_News @chiwaya_2022_inflation.
 
 ```{r}
 #| label: merge-files
-#| echo: false
-#| include: false
+#| message: false
 
 # Get a list of all Consumer Price Index(CPI) XLSX file paths
 xlsx_files <- list.files(
@@ -122,15 +128,17 @@ filtered_data <- inflation_data %>%
       "Meat and Eggs"
     )
   )
+# Display data after filtering
+filtered_data
 ```
 
-For the next step, we will merge the data with the data on [electricity price](https://www.eia.gov/electricity/monthly/), which is not included in the original data set.
+For the next step, we will merge the data with the data on electricity price @usenergyinformationadministration_2016_electric, which is not included in the original data set.
 
 We chose to use Residential Average Price of Electricity in cents per Kilowatt hour for the U.S as we do not want to focus on commercial or industrial prices.
 
 ```{r}
 #| label: merge-electricity-data
-#| include: false
+#| warning: false
 # Get a list of all the energy data XLSX file paths
 xlsx_files <- list.files(
   path = "data/raw/energy",
@@ -154,6 +162,8 @@ energy_data <- map_dfr(xlsx_files, ~ {
 
 # Merge filtered CPI data and energy data
 merged_data <- bind_rows(filtered_data, energy_data)
+# Display the data after merging with electricity category
+merged_data
 ```
 
 We then unite the year and month columns into one date column for ease of visualization and rename percent_change into inflation_rate.
@@ -164,7 +174,7 @@ Finally, we save the csv so we no longer need to run the time-consuming data cle
 
 ```{r}
 #| label: finalise-long-data
-#| echo: false
+#| warning: false
 
 # merge year and month into date, rename percent_change to inflation_rate
 long_data <- merged_data %>%
@@ -178,17 +188,18 @@ long_data$expenditure_category <- str_wrap(long_data$expenditure_category,
 
 # Save the csv
 write_csv(long_data, "data/merged/inflation_data.csv")
+# Display data after pivoting to long format
+long_data
 ```
 
 # COVID-19 data for contextualization
 
-To enhance our understanding of inflation trends, we are incorporating COVID-19 data as a contextual variable. This additional dataset, sourced from the [World Health Organization](https://data.who.int/dashboards/covid19/data/), comprises daily reported COVID-19 cases from January 2020 to January 2024. By integrating this information, we aim to provide a more comprehensive perspective on the factors potentially influencing inflation patterns during this period. This data enrichment allows us to explore possible correlations between the pandemic's progression and observed economic fluctuations, thereby offering a more nuanced analysis of inflationary trends.
+To enhance our understanding of inflation trends, we are incorporating COVID-19 data as a contextual variable. This additional dataset, sourced from the World Health Organization @covid19, comprises daily reported COVID-19 cases from January 2020 to January 2024. By integrating this information, we aim to provide a more comprehensive perspective on the factors potentially influencing inflation patterns during this period. This data enrichment allows us to explore possible correlations between the pandemic's progression and observed economic fluctuations, thereby offering a more nuanced analysis of inflationary trends.
 
 We filtered the data to only include the United States of America and calculated the total number of COVID-19 cases reported each month. We then normalized the total cases to fit the 0.00 to 1.00 range for visualization purposes. To align the COVID-19 data with the inflation data, we removed the last 5 months of data to only include up to Jan 2024. We save the csv for future use at the end.
 
 ```{r}
 #| label: merge-covid-data
-#| include: false
 
 covid_data <- read_csv("data/raw/covid/WHO-COVID-19-global-data.csv")
 
@@ -209,4 +220,6 @@ covid_data <- covid_data |>
 
 # Save the csv
 write_csv(covid_data, "data/merged/covid_data.csv")
+# Display covid data
+covid_data
 ```

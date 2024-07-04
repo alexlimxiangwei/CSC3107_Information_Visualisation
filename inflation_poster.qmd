@@ -7,8 +7,8 @@ format:
     departments: "Computing Science"
     institution-logo: "./images/sit-logo.png"
     univ-logo-scale: 50
-    footer-text: "Information Visualization 2024"
-    footer-emails: "singaporetech.edu.sg"
+    footer-text: ""
+    footer-emails: "Team Moccasin"
     footer-color: "ff0000"
     keep-typ: true
  
@@ -32,7 +32,7 @@ source("inflation_prep.R")
 
 Inflation, the rate at which the general level of prices for goods and services rises, eroding purchasing power, is a key economic indicator. It impacts everything from the cost of groceries to the interest rates on loans[^1]. While moderate inflation is a sign of a growing economy, excessive inflation can reduce the value of money, leading to financial strain for consumers. In this project, we have built on a comprehensive visualization to monitor inflation across various consumer metrics in the USA, originally published by NBC News [^2] (@fig-nbc-on-poster). The visualization below shows monthly changes in consumer prices compared to the same time the previous year. Despite the visualization's effectiveness in showing an overview of the price changes, we aim to improve certain aspects to better highlight the underlying trend of inflation change in a year-over-year basis of different consumer metrics.
 
-[^1]: https://www.hbs.edu/ris/Publication%20Files/Paper_Covid_Price_IMFER_23_4663bd2c-c1a8-4448-aa9f-98a3bc197142.pdf
+[^1]: <https://www.hbs.edu/ris/Publication%20Files/Paper_Covid_Price_IMFER_23_4663bd2c-c1a8-4448-aa9f-98a3bc197142.pdf>
 
 [^2]: <https://www.nbcnews.com/data-graphics/inflation-tracker-how-much-prices-rising-us-consumers-n1296378>
 
@@ -91,6 +91,7 @@ We used the Quarto publication framework and the R programming language, along w
 #v(2em)
 #v(2em)
 ```
+
 # Improved Visualization
 
 ```{r}
@@ -133,6 +134,7 @@ ggplot() +
   scale_fill_fermenter(
     palette = "RdBu",
     breaks = seq(-50, 50, 10),
+    labels = c("↓ -50", -40, -30, -20, -10, 0, 10, 20, 30, 40, "50 ↑"),
     limits = c(-50, 50)
   ) +
   scale_y_continuous(
@@ -155,7 +157,7 @@ ggplot() +
   ) +
   # X-axis labels and scaling representing Time
   scale_x_discrete(breaks = levels(covid_data$month)
-                   [seq(1, length(levels(covid_data$month)), by = 3)]) +
+  [seq(1, length(levels(covid_data$month)), by = 3)]) +
   scale_color_manual(values = c("Number of COVID-19 cases" = "#D21404")) +
   theme(
     legend.position = "top",
@@ -163,7 +165,7 @@ ggplot() +
     legend.box.just = "left",
     legend.margin = margin(20, 0, 10, 0),
     legend.spacing.x = unit(1, "cm"),
-    legend.key.width = unit(1.25, "cm"),
+    legend.key.width = unit(3, "cm"),
     axis.text.x = element_text(angle = 45, hjust = 1),
     axis.text.y = element_text(size = 10, vjust = 0.5),
     axis.title.x = element_text(vjust = -1, margin = margin(t = 10)),
@@ -177,7 +179,7 @@ ggplot() +
     y = "Expenditure Category",
     fill = "Year-over-Year Price Change (%)",
     color = "Data Type",
-    caption = "Source: Bureau of Labor Statistics and 
+    caption = "Source: Bureau of Labor Statistics and
                Energy Information Administration & WHO"
   ) +
   guides(

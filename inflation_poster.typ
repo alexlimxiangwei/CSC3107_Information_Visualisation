@@ -169,10 +169,10 @@
   // Footer text.
   // For instance, Name of Conference, Date, Location.
   // or Course Name, Date, Instructor.
-  footer_text: "Footer Text",
+  footer_text: "",
 
   // Any URL, like a link to the conference website.
-  footer_url: "Footer URL",
+  footer_url: "Information Visualisation",
 
   // Email IDs of the authors.
   footer_email_ids: "Email IDs (separated by commas)",
@@ -228,7 +228,7 @@
   num_columns = int(num_columns)
   univ_logo_column_size = int(univ_logo_column_size) * 1in
   title_column_size = int(title_column_size) * 1in
-  footer_url_font_size = int(footer_url_font_size) * 0pt
+  footer_url_font_size = int(footer_url_font_size) * 1pt
   footer_text_font_size = int(footer_text_font_size) * 1pt
 
   // Configure the page.
@@ -239,8 +239,8 @@
     margin: 
       (top: 1in, left: 2in, right: 2in, bottom: 2in),
     footer: [
-      #set align(center)
-      #set text(32pt)
+      #set align(left)
+      #set text(32pt, white)
       #block(
         fill: rgb(footer_color),
         width: 100%,
@@ -366,13 +366,13 @@
   // Footer text.
   // For instance, Name of Conference, Date, Location.
   // or Course Name, Date, Instructor.
-   footer_text: [Information Visualization 2024], 
+  
 
   // Any URL, like a link to the conference website.
   
 
   // Emails of the authors.
-   footer_email_ids: [singaporetech.edu.sg], 
+   footer_email_ids: [Team Moccasin], 
 
   // Color of the footer.
    footer_color: "ff0000", 
@@ -417,7 +417,7 @@
 
 = Introduction
 <introduction>
-Inflation, the rate at which the general level of prices for goods and services rises, eroding purchasing power, is a key economic indicator. It impacts everything from the cost of groceries to the interest rates on loans#footnote[https:\/\/www.hbs.edu/ris/Publication%20Files/Paper\_Covid\_Price\_IMFER\_23\_4663bd2c-c1a8-4448-aa9f-98a3bc197142.pdf];. While moderate inflation is a sign of a growing economy, excessive inflation can reduce the value of money, leading to financial strain for consumers. In this project, we have built on a comprehensive visualization to monitor inflation across various consumer metrics in the USA, originally published by NBC News #footnote[#link("https://www.nbcnews.com/data-graphics/inflation-tracker-how-much-prices-rising-us-consumers-n1296378");] \(@fig-nbc-on-poster). The visualization below shows monthly changes in consumer prices compared to the same time the previous year. Despite the visualization’s effectiveness in showing an overview of the price changes, we aim to improve certain aspects to better highlight the underlying trend of inflation change in a year-over-year basis of different consumer metrics.
+Inflation, the rate at which the general level of prices for goods and services rises, eroding purchasing power, is a key economic indicator. It impacts everything from the cost of groceries to the interest rates on loans#footnote[#link("https://www.hbs.edu/ris/Publication%20Files/Paper_Covid_Price_IMFER_23_4663bd2c-c1a8-4448-aa9f-98a3bc197142.pdf");];. While moderate inflation is a sign of a growing economy, excessive inflation can reduce the value of money, leading to financial strain for consumers. In this project, we have built on a comprehensive visualization to monitor inflation across various consumer metrics in the USA, originally published by NBC News #footnote[#link("https://www.nbcnews.com/data-graphics/inflation-tracker-how-much-prices-rising-us-consumers-n1296378");] \(@fig-nbc-on-poster). The visualization below shows monthly changes in consumer prices compared to the same time the previous year. Despite the visualization’s effectiveness in showing an overview of the price changes, we aim to improve certain aspects to better highlight the underlying trend of inflation change in a year-over-year basis of different consumer metrics.
 
 = Previous Visualization
 <previous-visualization>

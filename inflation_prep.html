@@ -6,6 +6,12 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Loh Xian Ming Jeremiah">
+<meta name="author" content="Wong Zhen Line">
+<meta name="author" content="Veleon Lim Ming Zhe">
+<meta name="author" content="Farah Binte Mohamed Tajudeen">
+<meta name="author" content="Lim Xiang Wei Alex">
+<meta name="author" content="Javier Ng Wei Cheng">
 
 <title>Visualising inflation in the USA (2019-2024)</title>
 <style>
@@ -20,7 +26,61 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="inflation_prep_files/libs/clipboard/clipboard.min.js"></script>
@@ -53,6 +113,17 @@ ul.task-list li input[type="checkbox"] {
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Authors</div>
+    <div class="quarto-title-meta-contents">
+             <p>Loh Xian Ming Jeremiah </p>
+             <p>Wong Zhen Line </p>
+             <p>Veleon Lim Ming Zhe </p>
+             <p>Farah Binte Mohamed Tajudeen </p>
+             <p>Lim Xiang Wei Alex </p>
+             <p>Javier Ng Wei Cheng </p>
+          </div>
+  </div>
     
   
     
@@ -65,8 +136,19 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>This document contains the data engineering required to reconstruct and improve the plot by <span class="citation" data-cites="Joella_Carman">@Joella_Carman</span> and <span class="citation" data-cites="Nigel_Chiwaya">@Nigel_Chiwaya</span>, shown in <span class="citation" data-cites="NBC_News">@NBC_News</span>, depicting inflation year over year for major categories of goods (May 2023 to Apr 2024).</p>
+<p>This document contains the data engineering required to reconstruct and improve the plot by <span class="citation" data-cites="archived"><span>“Archived Consumer Price Index Supplemental Files”</span> (<a href="#ref-archived" role="doc-biblioref">n.d.</a>)</span> and <span class="citation" data-cites="usenergyinformationadministration_2016_electric">Administration (<a href="#ref-usenergyinformationadministration_2016_electric" role="doc-biblioref">2016</a>)</span>, shown in <span class="citation" data-cites="chiwaya_2022_inflation">Chiwaya, Carman, and Jefferies (<a href="#ref-chiwaya_2022_inflation" role="doc-biblioref">2022</a>)</span>, depicting inflation year over year for major categories of goods (May 2023 to Apr 2024).</p>
 <p>The code below requires the following packages:</p>
+<div class="cell" data-authors="Loh Xian Ming Jeremiah, Wong Zhen Line, Veleon Lim Ming Zhe, Farah Binte Mohamed Tajudeen, Lim Xiang Wei Alex, Javier Ng Wei Cheng">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(grid)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-inflation" class="quarto-figure quarto-figure-center quarto-float anchored">
@@ -75,7 +157,7 @@ ul.task-list li input[type="checkbox"] {
 <img src="images/inflation-original-big.png" class="img-fluid figure-img" width="468">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inflation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: Visualising inflation in the USA from May 2023 to Apr 2024 by <span class="citation" data-cites="Joella_Carman">@Joella_Carman</span> and <span class="citation" data-cites="Nigel_Chiwaya">@Nigel_Chiwaya</span>.
+Figure&nbsp;1: Visualising inflation in the USA from May 2023 to Apr 2024 by Joella_Carman and Nigel_Chiwaya <span class="citation" data-cites="chiwaya_2022_inflation">Chiwaya, Carman, and Jefferies (<a href="#ref-chiwaya_2022_inflation" role="doc-biblioref">2022</a>)</span>.
 </figcaption>
 </figure>
 </div>
@@ -84,7 +166,7 @@ Figure&nbsp;1: Visualising inflation in the USA from May 2023 to Apr 2024 by <sp
 </section>
 <section id="data-cleaning" class="level1">
 <h1>Data Cleaning</h1>
-<p><span class="citation" data-cites="Joella_Carman">@Joella_Carman</span> and <span class="citation" data-cites="Nigel_Chiwaya">@Nigel_Chiwaya</span> based their visualization data on <a href="https://www.bls.gov/cpi/tables/supplemental-files/">Bureau of Labor Statistics</a> and <a href="https://www.eia.gov/electricity/monthly/">Energy Information Administration</a> data, available in XLXS format with each row representing a major category of goods.</p>
+<p>Joella_Carman and Nigel_Chiwaya based their visualization data on Bureau of Labor Statistics <span class="citation" data-cites="archived"><span>“Archived Consumer Price Index Supplemental Files”</span> (<a href="#ref-archived" role="doc-biblioref">n.d.</a>)</span> and Energy Information Administration <span class="citation" data-cites="usenergyinformationadministration_2016_electric">Administration (<a href="#ref-usenergyinformationadministration_2016_electric" role="doc-biblioref">2016</a>)</span> data, available in XLXS format with each row representing a major category of goods.</p>
 <p>Instead of only May 2023 to Apr 2024, we will instead use data from Jan 2019 to Jan 2024. Having 5 years of data will give us a clearer picture of the inflation rates for the major categories of goods.</p>
 <p>The data is separated into various XLXS files, one for each month. We will combine these files into a single data set, while also dropping columns that are not relevant for our analysis.</p>
 <p>Relevant columns for data processing include: - <code>Expenditure category</code>: Category of goods - <code>Unadjusted percent change</code>: Inflation rate change year on year for the category</p>
@@ -98,20 +180,231 @@ Figure&nbsp;1: Visualising inflation in the USA from May 2023 to Apr 2024 by <sp
 <li><p><code>Meats and eggs</code>: Meats, poultry, fish, and eggs</p></li>
 <li><p><code>Gasoline</code>: Gas</p></li>
 </ul>
-<p>These categories are in line with those in the original plot shown in <span class="citation" data-cites="NBC_News">@NBC_News</span>.</p>
-<p>For the next step, we will merge the data with the data on <a href="https://www.eia.gov/electricity/monthly/">electricity price</a>, which is not included in the original data set.</p>
+<p>These categories are in line with those in the original plot shown in NBC_News <span class="citation" data-cites="chiwaya_2022_inflation">Chiwaya, Carman, and Jefferies (<a href="#ref-chiwaya_2022_inflation" role="doc-biblioref">2022</a>)</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get a list of all Consumer Price Index(CPI) XLSX file paths</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>xlsx_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">path =</span> <span class="st">"data/raw/cpi"</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern =</span> <span class="st">"*.xlsx"</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">full.names =</span> <span class="cn">TRUE</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter out temporary files</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>xlsx_files <span class="ot">&lt;-</span> xlsx_files[<span class="sc">!</span><span class="fu">grepl</span>(<span class="st">"~</span><span class="sc">\\</span><span class="st">$"</span>, xlsx_files)]</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Read and combine the XLSX files,</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># selecting the desired columns and skipping rows</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># We also add columns for year and month of data</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>inflation_data <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(xlsx_files, <span class="cf">function</span>(file) {</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read_excel</span>(file, <span class="at">skip =</span> <span class="dv">6</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Select the relevant columns and clean up the data</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">expenditure_category =</span> <span class="dv">2</span>,</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">percent_change =</span> <span class="dv">4</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">year =</span> <span class="fu">str_extract</span>(<span class="fu">basename</span>(file), <span class="st">"</span><span class="sc">\\</span><span class="st">d{4}"</span>),</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Extract year from file name</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">month =</span> <span class="fu">str_extract</span>(<span class="fu">basename</span>(file), <span class="st">"</span><span class="sc">\\</span><span class="st">d{2}(?!</span><span class="sc">\\</span><span class="st">d)"</span>),</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Extract month from file name</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>      <span class="at">expenditure_category =</span> <span class="fu">str_replace</span>(expenditure_category, <span class="st">"</span><span class="sc">\\</span><span class="st">(.*"</span>, <span class="st">""</span>)</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span> <span class="co"># Remove parentheses and text inside to simplify category names</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(expenditure_category)) <span class="co"># Remove NA in expenditure_category</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep only the categories we are interested in</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>keep_categories <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  <span class="st">"All items"</span>,</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Airline fares"</span>,</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  <span class="st">"New and used motor vehicles"</span>,</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Apparel"</span>,</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Shelter"</span>,</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Meats, poultry, fish, and eggs"</span>,</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Gasoline "</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>filtered_data <span class="ot">&lt;-</span> inflation_data <span class="sc">%&gt;%</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(expenditure_category <span class="sc">%in%</span> keep_categories) <span class="sc">|&gt;</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">expenditure_category =</span> <span class="fu">str_replace_all</span>(expenditure_category,</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>                                           <span class="st">"New and used motor vehicles"</span>,</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>                                           <span class="st">"Vehicles"</span>)</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">expenditure_category =</span> <span class="fu">str_replace_all</span>(</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>      expenditure_category,</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Meats, poultry, fish, and eggs"</span>,</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Meat and Eggs"</span></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a><span class="co"># Display data after filtering</span></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>filtered_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 343 × 4
+   expenditure_category percent_change year  month
+   &lt;chr&gt;                         &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;
+ 1 "All items"                     2.5 2020  01   
+ 2 "Meat and Eggs"                 1.9 2020  01   
+ 3 "Gasoline "                    12.8 2020  01   
+ 4 "Apparel"                      -1.3 2020  01   
+ 5 "Shelter"                       3.3 2020  01   
+ 6 "Airline fares"                 2.7 2020  01   
+ 7 "Vehicles"                     -1.1 2020  01   
+ 8 "All items"                     2.3 2020  02   
+ 9 "Meat and Eggs"                 1.9 2020  02   
+10 "Gasoline "                     5.6 2020  02   
+# ℹ 333 more rows</code></pre>
+</div>
+</div>
+<p>For the next step, we will merge the data with the data on electricity price <span class="citation" data-cites="usenergyinformationadministration_2016_electric">Administration (<a href="#ref-usenergyinformationadministration_2016_electric" role="doc-biblioref">2016</a>)</span>, which is not included in the original data set.</p>
 <p>We chose to use Residential Average Price of Electricity in cents per Kilowatt hour for the U.S as we do not want to focus on commercial or industrial prices.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get a list of all the energy data XLSX file paths</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>xlsx_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">path =</span> <span class="st">"data/raw/energy"</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern =</span> <span class="st">"*.xlsx"</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">full.names =</span> <span class="cn">TRUE</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Read and combine the XLSX files, calculate percentage change of energy</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>energy_data <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(xlsx_files, <span class="sc">~</span> {</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read_excel</span>(.x, <span class="at">skip =</span> <span class="dv">64</span>, <span class="at">n_max =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="at">current_price =</span> <span class="dv">2</span>, <span class="at">previous_price =</span> <span class="dv">3</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">transmute</span>(</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">expenditure_category =</span> <span class="st">"Energy"</span>,</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">percent_change =</span> <span class="fu">round</span>((current_price <span class="sc">-</span> previous_price) <span class="sc">/</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>                               previous_price <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>),</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Add year and month of each data point</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">year =</span> <span class="fu">str_extract</span>(<span class="fu">basename</span>(.x), <span class="st">"</span><span class="sc">\\</span><span class="st">d{4}"</span>),</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">month =</span> <span class="fu">str_extract</span>(<span class="fu">basename</span>(.x), <span class="st">"</span><span class="sc">\\</span><span class="st">d{2}(?!</span><span class="sc">\\</span><span class="st">d)"</span>)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge filtered CPI data and energy data</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>merged_data <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(filtered_data, energy_data)</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the data after merging with electricity category</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>merged_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 392 × 4
+   expenditure_category percent_change year  month
+   &lt;chr&gt;                         &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;
+ 1 "All items"                     2.5 2020  01   
+ 2 "Meat and Eggs"                 1.9 2020  01   
+ 3 "Gasoline "                    12.8 2020  01   
+ 4 "Apparel"                      -1.3 2020  01   
+ 5 "Shelter"                       3.3 2020  01   
+ 6 "Airline fares"                 2.7 2020  01   
+ 7 "Vehicles"                     -1.1 2020  01   
+ 8 "All items"                     2.3 2020  02   
+ 9 "Meat and Eggs"                 1.9 2020  02   
+10 "Gasoline "                     5.6 2020  02   
+# ℹ 382 more rows</code></pre>
+</div>
+</div>
 <p>We then unite the year and month columns into one date column for ease of visualization and rename percent_change into inflation_rate.</p>
 <p>We also wrap long category labels to prevent long category names from overlapping or extending beyond the plotting area.</p>
 <p>Finally, we save the csv so we no longer need to run the time-consuming data cleaning code.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># merge year and month into date, rename percent_change to inflation_rate</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>long_data <span class="ot">&lt;-</span> merged_data <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unite</span>(date, year, month, <span class="at">sep =</span> <span class="st">"/"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">inflation_rate =</span> percent_change)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Wrap long expenditure category labels</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>long_data<span class="sc">$</span>expenditure_category <span class="ot">&lt;-</span> <span class="fu">str_wrap</span>(long_data<span class="sc">$</span>expenditure_category,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>                                           <span class="at">width =</span> <span class="dv">20</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Save the csv</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(long_data, <span class="st">"data/merged/inflation_data.csv"</span>)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Display data after pivoting to long format</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>long_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 392 × 3
+   expenditure_category inflation_rate date   
+   &lt;chr&gt;                         &lt;dbl&gt; &lt;chr&gt;  
+ 1 All items                       2.5 2020/01
+ 2 Meat and Eggs                   1.9 2020/01
+ 3 Gasoline                       12.8 2020/01
+ 4 Apparel                        -1.3 2020/01
+ 5 Shelter                         3.3 2020/01
+ 6 Airline fares                   2.7 2020/01
+ 7 Vehicles                       -1.1 2020/01
+ 8 All items                       2.3 2020/02
+ 9 Meat and Eggs                   1.9 2020/02
+10 Gasoline                        5.6 2020/02
+# ℹ 382 more rows</code></pre>
+</div>
+</div>
 </section>
 <section id="covid-19-data-for-contextualization" class="level1">
 <h1>COVID-19 data for contextualization</h1>
-<p>To enhance our understanding of inflation trends, we are incorporating COVID-19 data as a contextual variable. This additional dataset, sourced from the <a href="https://data.who.int/dashboards/covid19/data/">World Health Organization</a>, comprises daily reported COVID-19 cases from January 2020 to January 2024. By integrating this information, we aim to provide a more comprehensive perspective on the factors potentially influencing inflation patterns during this period. This data enrichment allows us to explore possible correlations between the pandemic’s progression and observed economic fluctuations, thereby offering a more nuanced analysis of inflationary trends.</p>
+<p>To enhance our understanding of inflation trends, we are incorporating COVID-19 data as a contextual variable. This additional dataset, sourced from the World Health Organization <span class="citation" data-cites="covid19"><span>“COVID-19 Data | WHO COVID-19 Dashboard”</span> (<a href="#ref-covid19" role="doc-biblioref">n.d.</a>)</span>, comprises daily reported COVID-19 cases from January 2020 to January 2024. By integrating this information, we aim to provide a more comprehensive perspective on the factors potentially influencing inflation patterns during this period. This data enrichment allows us to explore possible correlations between the pandemic’s progression and observed economic fluctuations, thereby offering a more nuanced analysis of inflationary trends.</p>
 <p>We filtered the data to only include the United States of America and calculated the total number of COVID-19 cases reported each month. We then normalized the total cases to fit the 0.00 to 1.00 range for visualization purposes. To align the COVID-19 data with the inflation data, we removed the last 5 months of data to only include up to Jan 2024. We save the csv for future use at the end.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>covid_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/raw/covid/WHO-COVID-19-global-data.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 55440 Columns: 8
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (3): Country_code, Country, WHO_region
+dbl  (4): New_cases, Cumulative_cases, New_deaths, Cumulative_deaths
+date (1): Date_reported
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare the COVID-19 data</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>covid_data <span class="ot">&lt;-</span> covid_data <span class="sc">|&gt;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Country <span class="sc">==</span> <span class="st">"United States of America"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Date_reported, New_cases) <span class="sc">|&gt;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Date_reported =</span> <span class="fu">as.Date</span>(Date_reported, <span class="st">"%m/%y"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="at">month =</span> <span class="fu">floor_date</span>(Date_reported, <span class="st">"month"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total_cases =</span> <span class="fu">sum</span>(New_cases, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">month =</span> <span class="fu">format</span>(month, <span class="st">"%Y/%m"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">month =</span> <span class="fu">as.factor</span>(month)) <span class="sc">|&gt;</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Normalize the total cases</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total_cases =</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>           (total_cases <span class="sc">-</span> <span class="fu">min</span>(total_cases, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">/</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>           (<span class="fu">max</span>(total_cases, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">-</span> <span class="fu">min</span>(total_cases, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span>(<span class="fu">n</span>() <span class="sc">-</span> <span class="dv">5</span>)) <span class="co"># Remove the 5 months data to only include up to Jan 2024</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Save the csv</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(covid_data, <span class="st">"data/merged/covid_data.csv"</span>)</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Display covid data</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>covid_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 49 × 2
+   month   total_cases
+   &lt;fct&gt;         &lt;dbl&gt;
+ 1 2020/01 0.000000320
+ 2 2020/02 0.00000151 
+ 3 2020/03 0.00577    
+ 4 2020/04 0.0364     
+ 5 2020/05 0.0394     
+ 6 2020/06 0.0338     
+ 7 2020/07 0.0763     
+ 8 2020/08 0.0814     
+ 9 2020/09 0.0515     
+10 2020/10 0.0672     
+# ℹ 39 more rows</code></pre>
+</div>
+</div>
+
 </section>
 
-</main>
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-usenergyinformationadministration_2016_electric" class="csl-entry" role="listitem">
+Administration, U. S. Energy Information. 2016. <span>“Electric Power Monthly - u.s. Energy Information Administration.”</span> Eia.gov. <a href="https://www.eia.gov/electricity/monthly/">https://www.eia.gov/electricity/monthly/</a>.
+</div>
+<div id="ref-archived" class="csl-entry" role="listitem">
+<span>“Archived Consumer Price Index Supplemental Files.”</span> n.d. Bureau of Labor Statistics. Accessed July 4, 2024. <a href="https://www.bls.gov/cpi/tables/supplemental-files">https://www.bls.gov/cpi/tables/supplemental-files</a>.
+</div>
+<div id="ref-chiwaya_2022_inflation" class="csl-entry" role="listitem">
+Chiwaya, Nigel, JoElla Carman, and Danica Jefferies. 2022. <span>“Inflation in America: Track Where Prices Are Rising.”</span> NBC News. <a href="https://www.nbcnews.com/data-graphics/inflation-tracker-how-much-prices-rising-us-consumers-n1296378">https://www.nbcnews.com/data-graphics/inflation-tracker-how-much-prices-rising-us-consumers-n1296378</a>.
+</div>
+<div id="ref-covid19" class="csl-entry" role="listitem">
+<span>“COVID-19 Data | WHO COVID-19 Dashboard.”</span> n.d. datadot. Accessed July 4, 2024. <a href="https://data.who.int/dashboards/covid19/data/">https://data.who.int/dashboards/covid19/data/</a>.
+</div>
+</div></section></div></main>
 <!-- /main column -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
